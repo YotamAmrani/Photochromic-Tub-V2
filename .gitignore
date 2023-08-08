@@ -3,3 +3,8 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+.lib/
+include/
+test/
+.src/StepperController_30_7_plan_struct.ino
+.src/230807-152621-nanoatmega328.code-workspace
