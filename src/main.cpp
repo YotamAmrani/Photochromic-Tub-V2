@@ -32,6 +32,7 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
     // if movement was deteced
     if (current_steps_mask)
     {
+        StepperC->setEnable(true);
         if (state.sys_mode == IDLE)
         {
             state.sys_mode = MOVE;
@@ -51,8 +52,6 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
             state.sys_mode = IDLE;
         }
     }
-    Serial.print("state: ");
-    Serial.println(state.sys_mode);
 }
 
 void toggleLed(sys_state *state)
@@ -100,34 +99,23 @@ void setup()
     Serial.begin(115200);
     /** Init Joystick input pins **/
     editADCPrescaler();
-    pinMode(X_INPUT_PIN, INPUT);
-    pinMode(Y_INPUT_PIN, INPUT);
-    pinMode(Z_INPUT_PIN, INPUT);
-    pinMode(X_LIMIT_SW_PIN, INPUT_PULLUP);
-    pinMode(Y_LIMIT_SW_PIN, INPUT_PULLUP);
-    pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, LOW);
+    initJoystickPins();
 
     // int mm_to_move = 100;
     // int steps_to_move = mm_to_steps(mm_to_move, X_STEPS_PER_MM);
     unsigned long temp = 0;
     autoHoming(&stepperC);
 
-    // stepperC.initSegmentPlan(&seg_p, target);
     pl.initSegmentPlan(target);
     pl.printStepper();
     temp = micros();
     stepperC.setStepsRate(1000);
     stepperC.setEnable(true);
     state.sys_mode = PRINT;
-    //  while(current_position[X_AXIS] <= target[X_AXIS]){
-    //    Serial.println(current_position[X_AXIS]);
-    //    stepperC.move_(3,0);
-    //    }
-    //  stepperC.setEnable(false);
 
     Serial.println(micros() - temp);
     temp = micros();
+    pl.loadDrawing(squareDrawing);
 }
 
 void loop()
@@ -145,14 +133,7 @@ void loop()
     }
     else if (state.sys_mode == PRINT)
     {
-        pl.moveToPosition(&seg_p);
+        // pl.moveToPosition();
+        pl.plotDrawing(squareDrawing, 10);
     }
-
-    // move_ version is non blocking currently - may be called whenever we want
-    //  StepperC.setEnable(true);
-    //  if(current_position[X_AXIS] <= target[X_AXIS]){
-    //    Serial.println(current_position[X_AXIS]);
-    //    StepperC.move_(3,0);
-    //    }
-    //  StepperC.setEnable(false);
 }

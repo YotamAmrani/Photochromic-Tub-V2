@@ -13,4 +13,6 @@ void getMovementMask(int *current_steps_mask, int *current_direction_mask);
 
 void getMovementMaskD(int *current_steps_mask, int *current_direction_mask);
 
+void initJoystickPins();
+
 #endif
