@@ -4,6 +4,7 @@ Planner::Planner(StepperController *stepper_c, struct segment_plan *seg_pl)
 {
     _stepper_c = stepper_c;
     _segment_plan = seg_pl;
+    is_printing = false;
 }
 
 void Planner::printStepper()
@@ -31,18 +32,19 @@ void Planner::initSegmentPlan(const int *target_pos)
     // Set steps directions
     _segment_plan->current_direction_mask = getLineDirectionMask(_segment_plan->current_position, _segment_plan->target_position);
     _segment_plan->current_step_mask = 0;
-    _segment_plan->segment_is_enabled = false;
+    // _segment_plan->segment_is_enabled = false;
 }
 
 void Planner::moveToPosition(struct segment_plan *_segment_plan)
 {
+
     if (_segment_plan->current_position[X_AXIS] != _segment_plan->target_position[X_AXIS] || _segment_plan->current_position[Y_AXIS] != _segment_plan->target_position[Y_AXIS] || _segment_plan->current_position[Z_AXIS] != _segment_plan->target_position[Z_AXIS])
     {
-        if (!_segment_plan->segment_is_enabled)
+        if (!is_printing)
         {
+            is_printing = true;
             _stepper_c->setEnable(true);
             _stepper_c->setDirection(_segment_plan->current_direction_mask);
-            _segment_plan->segment_is_enabled = true;
         }
         _segment_plan->current_step_mask = 0;
         if (_segment_plan->dx && (_segment_plan->x_step_value >= _segment_plan->dominant_axis))
@@ -70,7 +72,7 @@ void Planner::moveToPosition(struct segment_plan *_segment_plan)
     else
     {
         _stepper_c->setEnable(false);
-        _segment_plan->segment_is_enabled = true;
+        is_printing = false;
     }
 }
 

@@ -9,6 +9,7 @@ class Planner
 private:
     StepperController *_stepper_c;
     struct segment_plan *_segment_plan;
+    bool is_printing;
 
 public:
     Planner(StepperController *stepperC, struct segment_plan *seg_pl);

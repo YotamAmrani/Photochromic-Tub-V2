@@ -38,7 +38,6 @@ struct segment_plan
   int x_step_value;
   int y_step_value;
   int z_step_value;
-  bool segment_is_enabled;
 };
 
 class StepperController
@@ -67,11 +66,11 @@ public:
 
   void setStepsCount(int x_steps, int y_steps, int z_steps);
 
-  void moveToPosition(const int *point);
+  // void moveToPosition(const int *point);
 
-  void moveToPosition(struct segment_plan *seg_p);
+  // void moveToPosition(struct segment_plan *seg_p);
 
-  void initSegmentPlan(struct segment_plan *seg_p, const int *target_position);
+  // void initSegmentPlan(struct segment_plan *seg_p, const int *target_position);
 };
 
 #endif

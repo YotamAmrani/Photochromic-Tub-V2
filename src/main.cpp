@@ -17,8 +17,9 @@ stepper_config stepper_c = {{X_AXIS, Y_AXIS, Z_AXIS},
                             STEPS_RATE,
                             0};
 
+sys_state state = {IDLE, 0};
 StepperController stepperC = StepperController(&stepper_c);
-int target[N_AXIS] = {1000, 1000, 0};
+int target[N_AXIS] = {2500, 2500, 0};
 const int *current_position = stepperC.getStepsCount();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepperC, &seg_p);
@@ -26,24 +27,32 @@ Planner pl = Planner(&stepperC, &seg_p);
 int current_steps_mask = 0;
 int current_direction_mask = 0;
 
-sys_state state = {IDLE, 0};
-
 void stateHandler(int current_steps_mask, StepperController *StepperC)
 {
-    // Turn on - not idle
-    if (state.sys_mode == IDLE && current_steps_mask)
+    // if movement was deteced
+    if (current_steps_mask)
     {
-        state.sys_mode = MOVE;
-        state.last_move_time_stamp = 0;
-        StepperC->setEnable(true);
+        if (state.sys_mode == IDLE)
+        {
+            state.sys_mode = MOVE;
+            state.last_move_time_stamp = 0;
+        }
+        else if (state.sys_mode == PRINT)
+        {
+            state.sys_mode = MOVE;
+            // reset the current state
+            // change to move state
+        }
     }
-    // Turn off - moving
-    if (state.sys_mode == MOVE && !current_steps_mask)
+    else
     {
-        state.sys_mode = IDLE;
-        state.last_move_time_stamp = micros();
-        StepperC->setEnable(false);
+        if (state.sys_mode == MOVE && (millis() - state.last_move_time_stamp) > 200)
+        {
+            state.sys_mode = IDLE;
+        }
     }
+    Serial.print("state: ");
+    Serial.println(state.sys_mode);
 }
 
 void toggleLed(sys_state *state)
@@ -110,6 +119,7 @@ void setup()
     temp = micros();
     stepperC.setStepsRate(1000);
     stepperC.setEnable(true);
+    state.sys_mode = PRINT;
     //  while(current_position[X_AXIS] <= target[X_AXIS]){
     //    Serial.println(current_position[X_AXIS]);
     //    stepperC.move_(3,0);
@@ -128,12 +138,14 @@ void loop()
     getMovementMask(&current_steps_mask, &current_direction_mask);
     stateHandler(current_steps_mask, &stepperC);
     toggleLed(&state);
-    // stepperC.move_(current_steps_mask, current_direction_mask);
 
-    // stepperC.moveToPosition(&seg_p);
-    pl.moveToPosition(&seg_p);
-    if (state.sys_mode == IDLE)
+    if (state.sys_mode == MOVE)
     {
+        stepperC.move_(current_steps_mask, current_direction_mask);
+    }
+    else if (state.sys_mode == PRINT)
+    {
+        pl.moveToPosition(&seg_p);
     }
 
     // move_ version is non blocking currently - may be called whenever we want
