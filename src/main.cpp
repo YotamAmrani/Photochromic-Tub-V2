@@ -50,6 +50,7 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
         if (state.sys_mode == MOVE && (millis() - state.last_move_time_stamp) > 200)
         {
             state.sys_mode = IDLE;
+            StepperC->setEnable(false);
         }
     }
 }
