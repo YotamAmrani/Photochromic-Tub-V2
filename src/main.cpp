@@ -36,7 +36,6 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
         if (state.sys_mode == IDLE)
         {
             state.sys_mode = MOVE;
-            state.last_move_time_stamp = 0;
         }
         else if (state.sys_mode == PRINT)
         {
@@ -44,11 +43,13 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
             // reset the current state
             // change to move state
         }
+        state.last_move_time_stamp = millis();
     }
     else
     {
-        if (state.sys_mode == MOVE && (millis() - state.last_move_time_stamp) > 200)
+        if (state.sys_mode == MOVE && (millis() - state.last_move_time_stamp) > LED_DEBOUNCE_TIME)
         {
+
             state.sys_mode = IDLE;
             StepperC->setEnable(false);
         }
@@ -57,7 +58,7 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
 
 void toggleLed(sys_state *state)
 {
-    if (state->sys_mode == MOVE)
+    if (!digitalRead(LED_PIN) && state->sys_mode == MOVE)
     {
         analogWrite(LED_PIN, LED_TURN_ON_VALUE);
     }
@@ -73,11 +74,11 @@ void autoHoming(StepperController *StepperC)
     StepperC->setEnable(true);
     while (digitalRead(X_LIMIT_SW_PIN))
     {
-        StepperC->move_(1, 1);
+        StepperC->moveStep(1, 1);
     }
     while (digitalRead(Y_LIMIT_SW_PIN))
     {
-        StepperC->move_(2, 2);
+        StepperC->moveStep(2, 2);
     }
     StepperC->setStepsCount(0, 0, 0);
     StepperC->setEnable(false);
@@ -105,18 +106,18 @@ void setup()
     // int mm_to_move = 100;
     // int steps_to_move = mm_to_steps(mm_to_move, X_STEPS_PER_MM);
     unsigned long temp = 0;
-    // autoHoming(&stepperC);
+    autoHoming(&stepperC);
 
-    // pl.initSegmentPlan(target);
-    // pl.printStepper();
+    pl.initSegmentPlan(target);
+    pl.printStepper();
     temp = micros();
-    stepperC.setStepsRate(1000);
+    stepperC.setStepsRate(500);
     stepperC.setEnable(true);
     state.sys_mode = PRINT;
 
     Serial.println(micros() - temp);
     temp = micros();
-    // pl.loadDrawing(squareDrawing);
+    pl.loadDrawing(squareDrawing);
 }
 
 void loop()
@@ -130,7 +131,7 @@ void loop()
 
     if (state.sys_mode == MOVE)
     {
-        stepperC.move_(current_steps_mask, current_direction_mask);
+        stepperC.moveStep(current_steps_mask, current_direction_mask);
     }
     else if (state.sys_mode == PRINT)
     {

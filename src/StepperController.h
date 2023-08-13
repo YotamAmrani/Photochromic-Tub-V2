@@ -41,7 +41,7 @@ private:
   int steps_counter[N_AXIS];
   struct move_prop *_move_prop;
 
-  void moveStep(int current_step_mask, int current_direction_mask);
+  void step(int current_step_mask, int current_direction_mask);
 
   int getLineDirectionMask(const int *point1, const int *point2);
 
@@ -54,7 +54,7 @@ public:
 
   void setEnable(bool isEnabled);
 
-  void move_(int steps_mask, int current_direction_mask);
+  void moveStep(int steps_mask, int current_direction_mask);
 
   const int *getStepsCount() const;
   // https://stackoverflow.com/questions/10716769/c-difference-between-const-positioning

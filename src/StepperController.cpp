@@ -57,7 +57,7 @@ const int *StepperController::getStepsCount() const
 }
 
 /*    MOVEMENT METHODS    **/
-void StepperController::moveStep(int current_step_mask, int current_direction_mask)
+void StepperController::step(int current_step_mask, int current_direction_mask)
 {
   unsigned long currnet_time_stamp = micros();
   // start of pulse
@@ -84,7 +84,7 @@ void StepperController::moveStep(int current_step_mask, int current_direction_ma
   }
 }
 
-void StepperController::move_(int steps_mask, int current_direction_mask)
+void StepperController::moveStep(int steps_mask, int current_direction_mask)
 {
   unsigned long currnet_time_stamp = micros();
   // start of movement
@@ -96,7 +96,7 @@ void StepperController::move_(int steps_mask, int current_direction_mask)
   {
     //          || currnet_time_stamp < _stepper_config -> move_time_stamp
     this->setDirection(current_direction_mask);
-    this->moveStep(steps_mask, current_direction_mask);
+    this->step(steps_mask, current_direction_mask);
     move_time_stamp_ = 0;
 
     // case that pulse ended - reset time stamp
