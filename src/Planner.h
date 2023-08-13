@@ -30,7 +30,7 @@ private:
     bool finished_drawing;
 
 public:
-    Planner(StepperController *stepperC, struct segment_plan *seg_pl);
+    Planner(StepperController *stepper_c, struct segment_plan *seg_pl);
     void printStepper();
     void initSegmentPlan(const int *target_pos);
     void loadDrawing(int drawing_to_plot[][N_AXIS]);
