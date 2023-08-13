@@ -10,7 +10,7 @@ void printCurrentPosition();
 sys_state state = {IDLE, 0};
 StepperController stepper_c = StepperController();
 int target[N_AXIS] = {2500, 2500, 0};
-const int *current_position = stepper_c.getStepsCount();
+const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
 
@@ -22,7 +22,7 @@ void stateHandler(int current_steps_mask, StepperController *stepper_c)
     // if movement was deteced
     if (current_steps_mask)
     {
-        stepper_c->setEnable(true);
+        stepper_c->set_enable(true);
         if (state.sys_mode == IDLE)
         {
             state.sys_mode = MOVE;
@@ -41,7 +41,7 @@ void stateHandler(int current_steps_mask, StepperController *stepper_c)
         {
 
             state.sys_mode = IDLE;
-            stepper_c->setEnable(false);
+            stepper_c->set_enable(false);
         }
     }
 }
@@ -61,30 +61,30 @@ void toggleLed(sys_state *state)
 void autoHoming(StepperController *stepper_c)
 {
     Serial.println("Auto homing! ");
-    stepper_c->setStepsRate(AUTO_HOME_STEPS_RATE);
-    stepper_c->setEnable(true);
+    stepper_c->set_steps_rate(AUTO_HOME_STEPS_RATE);
+    stepper_c->set_enable(true);
     while (digitalRead(X_LIMIT_SW_PIN))
     {
-        stepper_c->moveStep(1, 1);
+        stepper_c->move_step(1, 1);
     }
     while (digitalRead(Y_LIMIT_SW_PIN))
     {
-        stepper_c->moveStep(2, 2);
+        stepper_c->move_step(2, 2);
     }
-    stepper_c->setStepsCount(0, 0, 0);
-    stepper_c->setEnable(false);
-    stepper_c->setStepsRate(STEPS_RATE);
+    stepper_c->set_steps_count(0, 0, 0);
+    stepper_c->set_enable(false);
+    stepper_c->set_steps_rate(STEPS_RATE);
     printCurrentPosition();
 }
 
 void printCurrentPosition()
 {
     Serial.println("Position: ");
-    Serial.print(stepper_c.getStepsCount()[X_AXIS]);
+    Serial.print(stepper_c.get_steps_count()[X_AXIS]);
     Serial.print(",");
-    Serial.print(stepper_c.getStepsCount()[Y_AXIS]);
+    Serial.print(stepper_c.get_steps_count()[Y_AXIS]);
     Serial.print(",");
-    Serial.println(stepper_c.getStepsCount()[Z_AXIS]);
+    Serial.println(stepper_c.get_steps_count()[Z_AXIS]);
 }
 
 void setup()
@@ -103,7 +103,7 @@ void setup()
     pl.initialze_segment_plan(target);
     pl.print_stepper();
     temp = micros();
-    stepper_c.setEnable(true);
+    stepper_c.set_enable(true);
     state.sys_mode = PRINT;
     Serial.println(micros() - temp);
     temp = micros();
@@ -121,11 +121,10 @@ void loop()
 
     if (state.sys_mode == MOVE)
     {
-        stepper_c.moveStep(current_steps_mask, current_direction_mask);
+        stepper_c.move_step(current_steps_mask, current_direction_mask);
     }
     else if (state.sys_mode == PRINT)
     {
-        // pl.move_to_position();
         pl.plot_drawing(squareDrawingM, 10);
     }
 }

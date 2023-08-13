@@ -16,11 +16,11 @@ StepperController::StepperController() : step_pin_{X_STEP_PIN, Y_STEP_PIN, Z_STE
   pinMode(step_pin_[Z_AXIS], OUTPUT);
   pinMode(dir_pin_[Z_AXIS], OUTPUT);
   pinMode(en_pin_, OUTPUT);
-  this->setEnable(false);
+  this->set_enable(false);
 }
 
 /*    SETTERS    **/
-void StepperController::setStepsRate(unsigned long steps_rate)
+void StepperController::set_steps_rate(unsigned long steps_rate)
 {
   if (steps_rate >= 0)
   {
@@ -28,12 +28,12 @@ void StepperController::setStepsRate(unsigned long steps_rate)
   }
 }
 
-void StepperController::setEnable(bool isEnabled)
+void StepperController::set_enable(bool isEnabled)
 {
   digitalWrite(EN_PIN, !isEnabled);
 }
 
-void StepperController::setDirection(int current_direction_mask)
+void StepperController::set_direction(int current_direction_mask)
 {
   // set by the digit bits - if a bit is turned on, flip direction
   current_direction_mask = current_direction_mask ^ DIRECTION_INVERT_MASK;
@@ -42,7 +42,7 @@ void StepperController::setDirection(int current_direction_mask)
   digitalWrite(dir_pin_[Z_AXIS], bit_istrue(current_direction_mask, 1 << Z_AXIS));
 }
 
-void StepperController::setStepsCount(int x_steps, int y_steps, int z_steps)
+void StepperController::set_steps_count(int x_steps, int y_steps, int z_steps)
 {
   steps_counter_[X_AXIS] = x_steps;
   steps_counter_[Y_AXIS] = y_steps;
@@ -50,7 +50,7 @@ void StepperController::setStepsCount(int x_steps, int y_steps, int z_steps)
 }
 
 /*    GETTERS    **/
-const int *StepperController::getStepsCount() const
+const int *StepperController::get_steps_count() const
 {
   return steps_counter_;
 }
@@ -83,7 +83,7 @@ void StepperController::step(int current_step_mask, int current_direction_mask)
   }
 }
 
-void StepperController::moveStep(int steps_mask, int current_direction_mask)
+void StepperController::move_step(int steps_mask, int current_direction_mask)
 {
   unsigned long currnet_time_stamp = micros();
   // start of movement
@@ -95,7 +95,7 @@ void StepperController::moveStep(int steps_mask, int current_direction_mask)
   else if (move_time_stamp_ != 0 && currnet_time_stamp - move_time_stamp_ > steps_rate_)
   {
     //          || currnet_time_stamp < _stepper_config -> move_time_stamp
-    this->setDirection(current_direction_mask);
+    this->set_direction(current_direction_mask);
     this->step(steps_mask, current_direction_mask);
     move_time_stamp_ = 0;
 
