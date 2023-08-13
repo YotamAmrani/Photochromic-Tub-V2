@@ -71,7 +71,7 @@ void Planner::moveToPosition()
         _segment_plan->y_step_value += _segment_plan->dy;
         _segment_plan->z_step_value += _segment_plan->dz;
 
-        _stepper_c->move_(_segment_plan->current_step_mask, _segment_plan->current_direction_mask);
+        _stepper_c->moveStep(_segment_plan->current_step_mask, _segment_plan->current_direction_mask);
     }
     else
     {
