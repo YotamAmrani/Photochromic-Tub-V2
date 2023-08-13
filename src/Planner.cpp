@@ -3,17 +3,17 @@
 
 Planner::Planner(StepperController *stepper_c, struct segment_plan *seg_pl)
 {
-    _stepper_c = stepper_c;
-    _segment_plan = seg_pl;
-    current_drawing = nullptr;
-    current_segment = 0;
-    is_printing = false;
+    stepper_c_ = stepper_c;
+    segment_plan_ = seg_pl;
+    current_drawing_ = nullptr;
+    current_segment_ = 0;
+    is_printing_ = false;
     finished_drawing = true;
 }
 
 void Planner::printStepper()
 {
-    const int *pos = _stepper_c->getStepsCount();
+    const int *pos = stepper_c_->getStepsCount();
     Serial.println("POS:");
     Serial.print(pos[X_AXIS]);
     Serial.print(",");
@@ -24,59 +24,59 @@ void Planner::printStepper()
 
 void Planner::initSegmentPlan(const int *target_pos)
 {
-    _segment_plan->current_position = _stepper_c->getStepsCount();
-    _segment_plan->target_position = target_pos;
-    _segment_plan->dx = abs(_segment_plan->current_position[X_AXIS] - target_pos[X_AXIS]);
-    _segment_plan->dy = abs(_segment_plan->current_position[Y_AXIS] - target_pos[Y_AXIS]);
-    _segment_plan->dz = abs(_segment_plan->current_position[Z_AXIS] - target_pos[Z_AXIS]);
-    _segment_plan->dominant_axis = max(max(_segment_plan->dx, _segment_plan->dy), _segment_plan->dz);
-    _segment_plan->x_step_value = 0;
-    _segment_plan->y_step_value = 0;
-    _segment_plan->z_step_value = 0;
+    segment_plan_->current_position = stepper_c_->getStepsCount();
+    segment_plan_->target_position = target_pos;
+    segment_plan_->dx = abs(segment_plan_->current_position[X_AXIS] - target_pos[X_AXIS]);
+    segment_plan_->dy = abs(segment_plan_->current_position[Y_AXIS] - target_pos[Y_AXIS]);
+    segment_plan_->dz = abs(segment_plan_->current_position[Z_AXIS] - target_pos[Z_AXIS]);
+    segment_plan_->dominant_axis = max(max(segment_plan_->dx, segment_plan_->dy), segment_plan_->dz);
+    segment_plan_->x_step_value = 0;
+    segment_plan_->y_step_value = 0;
+    segment_plan_->z_step_value = 0;
     // Set steps directions
-    _segment_plan->current_direction_mask = getLineDirectionMask(_segment_plan->current_position, _segment_plan->target_position);
-    _segment_plan->current_step_mask = 0;
+    segment_plan_->current_direction_mask = getLineDirectionMask(segment_plan_->current_position, segment_plan_->target_position);
+    segment_plan_->current_step_mask = 0;
     // _segment_plan->segment_is_enabled = false;
 }
 
 void Planner::moveToPosition()
 {
 
-    if (_segment_plan->current_position[X_AXIS] != _segment_plan->target_position[X_AXIS] || _segment_plan->current_position[Y_AXIS] != _segment_plan->target_position[Y_AXIS] || _segment_plan->current_position[Z_AXIS] != _segment_plan->target_position[Z_AXIS])
+    if (segment_plan_->current_position[X_AXIS] != segment_plan_->target_position[X_AXIS] || segment_plan_->current_position[Y_AXIS] != segment_plan_->target_position[Y_AXIS] || segment_plan_->current_position[Z_AXIS] != segment_plan_->target_position[Z_AXIS])
     {
-        if (!is_printing)
+        if (!is_printing_)
         {
-            is_printing = true;
-            _stepper_c->setEnable(true);
-            _stepper_c->setDirection(_segment_plan->current_direction_mask);
+            is_printing_ = true;
+            stepper_c_->setEnable(true);
+            stepper_c_->setDirection(segment_plan_->current_direction_mask);
         }
-        _segment_plan->current_step_mask = 0;
-        if (_segment_plan->dx && (_segment_plan->x_step_value >= _segment_plan->dominant_axis))
+        segment_plan_->current_step_mask = 0;
+        if (segment_plan_->dx && (segment_plan_->x_step_value >= segment_plan_->dominant_axis))
         {
-            _segment_plan->current_step_mask = _segment_plan->current_step_mask | (1 << X_AXIS);
-            _segment_plan->x_step_value -= _segment_plan->dominant_axis;
+            segment_plan_->current_step_mask = segment_plan_->current_step_mask | (1 << X_AXIS);
+            segment_plan_->x_step_value -= segment_plan_->dominant_axis;
         }
-        if (_segment_plan->dy && (_segment_plan->y_step_value >= _segment_plan->dominant_axis))
+        if (segment_plan_->dy && (segment_plan_->y_step_value >= segment_plan_->dominant_axis))
         {
-            _segment_plan->current_step_mask = _segment_plan->current_step_mask | (1 << Y_AXIS);
-            _segment_plan->y_step_value -= _segment_plan->dominant_axis;
+            segment_plan_->current_step_mask = segment_plan_->current_step_mask | (1 << Y_AXIS);
+            segment_plan_->y_step_value -= segment_plan_->dominant_axis;
         }
-        if (_segment_plan->dz && (_segment_plan->z_step_value >= _segment_plan->dominant_axis))
+        if (segment_plan_->dz && (segment_plan_->z_step_value >= segment_plan_->dominant_axis))
         {
-            _segment_plan->current_step_mask = _segment_plan->current_step_mask | (1 << Z_AXIS);
-            _segment_plan->z_step_value -= _segment_plan->dominant_axis;
+            segment_plan_->current_step_mask = segment_plan_->current_step_mask | (1 << Z_AXIS);
+            segment_plan_->z_step_value -= segment_plan_->dominant_axis;
         }
 
-        _segment_plan->x_step_value += _segment_plan->dx;
-        _segment_plan->y_step_value += _segment_plan->dy;
-        _segment_plan->z_step_value += _segment_plan->dz;
+        segment_plan_->x_step_value += segment_plan_->dx;
+        segment_plan_->y_step_value += segment_plan_->dy;
+        segment_plan_->z_step_value += segment_plan_->dz;
 
-        _stepper_c->moveStep(_segment_plan->current_step_mask, _segment_plan->current_direction_mask);
+        stepper_c_->moveStep(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
     }
     else
     {
-        _stepper_c->setEnable(false);
-        is_printing = false;
+        stepper_c_->setEnable(false);
+        is_printing_ = false;
     }
 }
 
@@ -105,58 +105,33 @@ void Planner::loadDrawing(int drawing_to_plot[][N_AXIS])
 {
     Serial.println("Start printing!");
     finished_drawing = false;
-    current_drawing = (int **)drawing_to_plot;
+    current_drawing_ = (int **)drawing_to_plot;
 }
 
 void Planner::plotDrawing(int drawing_to_plot[][N_AXIS], int array_size)
 {
     if (!finished_drawing)
     {
-        if (!is_printing && current_segment < array_size)
+        if (!is_printing_ && current_segment_ < array_size)
         {
             // start of segment
-            initSegmentPlan(drawing_to_plot[current_segment]);
+            initSegmentPlan(drawing_to_plot[current_segment_]);
             moveToPosition();
             Serial.print("Finished segment:");
-            Serial.println(current_segment);
-            current_segment++;
+            Serial.println(current_segment_);
+            current_segment_++;
         }
-        else if (is_printing)
+        else if (is_printing_)
         {
             moveToPosition();
         }
-        else if (current_segment == array_size)
+        else if (current_segment_ == array_size)
         {
             Serial.println("Finished drawing!");
-            current_drawing = nullptr;
-            current_segment = 0;
+            current_drawing_ = nullptr;
+            current_segment_ = 0;
             finished_drawing = true;
-            is_printing = false;
+            is_printing_ = false;
         }
     }
-
-    // // case init drawing
-    // if (current_segment == 0)
-    // {
-    //     current_drawing = drawing_to_plot;
-    //     initSegmentPlan(drawing_to_plot[current_segment]);
-    //     is_printing = true;
-    // }
-    // else if (is_printing && current_segment < array_size)
-    // {
-    //     // keep moving, until reaching the end of the array
-    //     moveToPosition();
-    // }
-
-    // else if (!is_printing && current_segment < array_size)
-    // {
-    //     current_segment++;
-    //     initSegmentPlan(drawing_to_plot[current_segment]);
-    // }
-    // else if (current_segment == array_size)
-    // {
-    //     current_segment == 0;
-    //     Serial.print("Finished drawing!");
-    // }
-    // case finished drawing
 }

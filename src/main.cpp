@@ -7,16 +7,6 @@
 // DEFINITIONS:
 void printCurrentPosition();
 
-// Coordinates system
-// stepper_config stepper_c = {
-//     {X_STEP_PIN, Y_STEP_PIN, Z_STEP_PIN},
-//     {X_DIR_PIN, Y_DIR_PIN, Z_DIR_PIN},
-//     EN_PIN,
-//     micros(),
-//     micros(),
-//     STEPS_RATE,
-//     0};
-
 sys_state state = {IDLE, 0};
 StepperController stepperC = StepperController();
 int target[N_AXIS] = {2500, 2500, 0};
@@ -27,12 +17,12 @@ Planner pl = Planner(&stepperC, &seg_p);
 int current_steps_mask = 0;
 int current_direction_mask = 0;
 
-void stateHandler(int current_steps_mask, StepperController *StepperC)
+void stateHandler(int current_steps_mask, StepperController *stepperC)
 {
     // if movement was deteced
     if (current_steps_mask)
     {
-        StepperC->setEnable(true);
+        stepperC->setEnable(true);
         if (state.sys_mode == IDLE)
         {
             state.sys_mode = MOVE;
@@ -51,7 +41,7 @@ void stateHandler(int current_steps_mask, StepperController *StepperC)
         {
 
             state.sys_mode = IDLE;
-            StepperC->setEnable(false);
+            stepperC->setEnable(false);
         }
     }
 }
@@ -68,20 +58,22 @@ void toggleLed(sys_state *state)
     }
 }
 
-void autoHoming(StepperController *StepperC)
+void autoHoming(StepperController *stepperC)
 {
     Serial.println("Auto homing! ");
-    StepperC->setEnable(true);
+    stepperC->setStepsRate(AUTO_HOME_STEPS_RATE);
+    stepperC->setEnable(true);
     while (digitalRead(X_LIMIT_SW_PIN))
     {
-        StepperC->moveStep(1, 1);
+        stepperC->moveStep(1, 1);
     }
     while (digitalRead(Y_LIMIT_SW_PIN))
     {
-        StepperC->moveStep(2, 2);
+        stepperC->moveStep(2, 2);
     }
-    StepperC->setStepsCount(0, 0, 0);
-    StepperC->setEnable(false);
+    stepperC->setStepsCount(0, 0, 0);
+    stepperC->setEnable(false);
+    stepperC->setStepsRate(STEPS_RATE);
     printCurrentPosition();
 }
 
