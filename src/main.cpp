@@ -100,15 +100,14 @@ void setup()
     unsigned long temp = 0;
     autoHoming(&stepper_c);
 
-    pl.initSegmentPlan(target);
-    pl.printStepper();
+    pl.initialze_segment_plan(target);
+    pl.print_stepper();
     temp = micros();
     stepper_c.setEnable(true);
     state.sys_mode = PRINT;
-
     Serial.println(micros() - temp);
     temp = micros();
-    pl.loadDrawing(squareDrawing);
+    pl.load_drawing(squareDrawingM);
 }
 
 void loop()
@@ -126,7 +125,7 @@ void loop()
     }
     else if (state.sys_mode == PRINT)
     {
-        // pl.moveToPosition();
-        pl.plotDrawing(squareDrawing, 10);
+        // pl.move_to_position();
+        pl.plot_drawing(squareDrawingM, 10);
     }
 }

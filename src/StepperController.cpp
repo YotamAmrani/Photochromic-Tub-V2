@@ -105,24 +105,3 @@ void StepperController::moveStep(int steps_mask, int current_direction_mask)
     //            }
   }
 }
-
-int StepperController::getLineDirectionMask(const int *point1, const int *point2)
-{
-  const int x_direction_sign = sgn(point2[X_AXIS] - point1[X_AXIS]);
-  const int y_direction_sign = sgn(point2[Y_AXIS] - point1[Y_AXIS]);
-  const int z_direction_sign = sgn(point2[Z_AXIS] - point1[Z_AXIS]);
-  int current_direction_mask = 0;
-  if (x_direction_sign && x_direction_sign < 0)
-  {
-    current_direction_mask = current_direction_mask | (1 << X_AXIS);
-  }
-  if (y_direction_sign && y_direction_sign < 0)
-  {
-    current_direction_mask = current_direction_mask | (1 << Y_AXIS);
-  }
-  if (z_direction_sign && z_direction_sign < 0)
-  {
-    current_direction_mask = current_direction_mask | (1 << Z_AXIS);
-  }
-  return current_direction_mask;
-}
