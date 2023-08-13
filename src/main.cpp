@@ -8,17 +8,17 @@
 void printCurrentPosition();
 
 // Coordinates system
-stepper_config stepper_c = {{X_AXIS, Y_AXIS, Z_AXIS},
-                            {X_STEP_PIN, Y_STEP_PIN, Z_STEP_PIN},
-                            {X_DIR_PIN, Y_DIR_PIN, Z_DIR_PIN},
-                            EN_PIN,
-                            micros(),
-                            micros(),
-                            STEPS_RATE,
-                            0};
+// stepper_config stepper_c = {
+//     {X_STEP_PIN, Y_STEP_PIN, Z_STEP_PIN},
+//     {X_DIR_PIN, Y_DIR_PIN, Z_DIR_PIN},
+//     EN_PIN,
+//     micros(),
+//     micros(),
+//     STEPS_RATE,
+//     0};
 
 sys_state state = {IDLE, 0};
-StepperController stepperC = StepperController(&stepper_c);
+StepperController stepperC = StepperController();
 int target[N_AXIS] = {2500, 2500, 0};
 const int *current_position = stepperC.getStepsCount();
 segment_plan seg_p = {0};
@@ -105,10 +105,10 @@ void setup()
     // int mm_to_move = 100;
     // int steps_to_move = mm_to_steps(mm_to_move, X_STEPS_PER_MM);
     unsigned long temp = 0;
-    autoHoming(&stepperC);
+    // autoHoming(&stepperC);
 
-    pl.initSegmentPlan(target);
-    pl.printStepper();
+    // pl.initSegmentPlan(target);
+    // pl.printStepper();
     temp = micros();
     stepperC.setStepsRate(1000);
     stepperC.setEnable(true);
@@ -116,7 +116,7 @@ void setup()
 
     Serial.println(micros() - temp);
     temp = micros();
-    pl.loadDrawing(squareDrawing);
+    // pl.loadDrawing(squareDrawing);
 }
 
 void loop()

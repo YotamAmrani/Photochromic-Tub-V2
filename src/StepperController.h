@@ -4,18 +4,6 @@
 #include "Settings.h"
 #define STEPPER_CONTROLLER_H
 
-struct stepper_config
-{
-  const int axis[N_AXIS];
-  const int step_pin[N_AXIS];
-  const int dir_pin[N_AXIS];
-  const int en_pin;
-  unsigned long pulse_time_stamp;
-  unsigned long move_time_stamp;
-  unsigned long steps_rate;
-  int steps_counter[N_AXIS];
-};
-
 struct step_plan
 {
   unsigned long steps_rate;
@@ -43,7 +31,14 @@ struct segment_plan
 class StepperController
 {
 private:
-  struct stepper_config *_stepper_config;
+  // struct stepper_config *_stepper_config;
+  int step_pin[N_AXIS];
+  int dir_pin[N_AXIS];
+  int en_pin;
+  unsigned long pulse_time_stamp_;
+  unsigned long move_time_stamp_;
+  unsigned long steps_rate_;
+  int steps_counter[N_AXIS];
   struct move_prop *_move_prop;
 
   void moveStep(int current_step_mask, int current_direction_mask);
@@ -51,7 +46,7 @@ private:
   int getLineDirectionMask(const int *point1, const int *point2);
 
 public:
-  StepperController(struct stepper_config *stepper_config);
+  StepperController();
 
   void setDirection(int current_direction_mask);
 
