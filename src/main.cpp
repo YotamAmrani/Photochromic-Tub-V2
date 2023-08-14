@@ -12,7 +12,7 @@ void print_current_position();
 
 sys_state state = {IDLE, 0};
 StepperController stepper_c = StepperController();
-int target[N_AXIS] = {2500, 2500, 0};
+int target[N_AXIS] = {1406, 1550, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
@@ -25,6 +25,7 @@ void state_handler(int current_steps_mask, StepperController *stepper_c)
     // if movement was deteced
     if (current_steps_mask)
     {
+        // print_current_position();
         stepper_c->set_enable(true);
         if (state.sys_mode == IDLE)
         {
@@ -98,17 +99,13 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
 
-    unsigned long temp = 0;
     auto_homing(&stepper_c);
 
     pl.init_segment_plan(target);
     pl.print_stepper();
-    temp = micros();
     stepper_c.set_enable(true);
     state.sys_mode = PRINT;
 
-    Serial.println(micros() - temp);
-    temp = micros();
     pl.load_drawing(only_z, 2);
 }
 

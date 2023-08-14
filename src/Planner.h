@@ -6,7 +6,7 @@
 struct segment_plan
 {
     const int *current_position;
-    const int *target_position;
+    int target_position[N_AXIS];
     int current_step_mask;
     int current_direction_mask;
     int dx;
@@ -24,7 +24,8 @@ class Planner
 private:
     StepperController *stepper_c_;
     struct segment_plan *segment_plan_;
-    int (*current_drawing_)[N_AXIS];
+    double (*current_drawing_)[N_AXIS];
+    // https://stackoverflow.com/questions/22975633/reference-to-a-static-2d-array
     int current_drawing_size_;
     int current_segment_;
     bool is_printing_;
@@ -33,8 +34,10 @@ private:
 public:
     Planner(StepperController *stepper_c, struct segment_plan *seg_pl);
     void print_stepper();
+    void print_segment();
+    void print_segment_positions();
     void init_segment_plan(const int *target_pos);
-    void load_drawing(int drawing_to_plot[][N_AXIS], int drawing_size);
+    void load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size);
     void move_to_position();
     int get_line_direction_mask(const int *point1, const int *point2);
     void plot_drawing();
