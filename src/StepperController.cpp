@@ -106,7 +106,7 @@ void StepperController::moveStep(int steps_mask, int current_direction_mask)
   }
 }
 
-int StepperController::getLineDirectionMask(const int *point1, const int *point2)
+int StepperController::get_line_direction_mask(const int *point1, const int *point2)
 {
   const int x_direction_sign = sgn(point2[X_AXIS] - point1[X_AXIS]);
   const int y_direction_sign = sgn(point2[Y_AXIS] - point1[Y_AXIS]);

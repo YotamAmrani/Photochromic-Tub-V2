@@ -27,15 +27,15 @@ private:
     int **current_drawing_;
     int current_segment_;
     bool is_printing_;
-    bool finished_drawing;
+    bool finished_drawing_;
 
 public:
     Planner(StepperController *stepper_c, struct segment_plan *seg_pl);
-    void printStepper();
-    void initSegmentPlan(const int *target_pos);
-    void loadDrawing(int drawing_to_plot[][N_AXIS]);
-    void moveToPosition();
-    int getLineDirectionMask(const int *point1, const int *point2);
+    void print_stepper();
+    void init_segment_plan(const int *target_pos);
+    void load_drawing(int drawing_to_plot[][N_AXIS]);
+    void move_to_position();
+    int get_line_direction_mask(const int *point1, const int *point2);
     void plotDrawing(int drawing_to_plot[][N_AXIS], int array_size);
 };
 

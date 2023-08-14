@@ -100,15 +100,15 @@ void setup()
     unsigned long temp = 0;
     autoHoming(&stepper_c);
 
-    pl.initSegmentPlan(target);
-    pl.printStepper();
+    pl.init_segment_plan(target);
+    pl.print_stepper();
     temp = micros();
     stepper_c.setEnable(true);
     state.sys_mode = PRINT;
 
     Serial.println(micros() - temp);
     temp = micros();
-    pl.loadDrawing(squareDrawing);
+    pl.load_drawing(squareDrawing);
 }
 
 void loop()
