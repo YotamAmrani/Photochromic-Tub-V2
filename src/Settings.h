@@ -51,7 +51,7 @@
 #define AUTO_HOME_STEPS_RATE 1500
 #define X_STEPS_PER_MM 40
 #define Y_STEPS_PER_MM 40
-#define Z_STEPS_PER_MM 10
+#define Z_STEPS_PER_MM 100
 #define steps_to_mm(steps, ratio) (steps / ratio)
 #define mm_to_steps(mm, ratio) (mm * ratio)
 

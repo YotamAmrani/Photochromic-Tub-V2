@@ -106,7 +106,7 @@ void setup()
 
     Serial.println(micros() - temp);
     temp = micros();
-    pl.load_drawing(squareDrawingM);
+    pl.load_drawing(only_z);
 }
 
 void loop()
@@ -125,6 +125,6 @@ void loop()
     else if (state.sys_mode == PRINT)
     {
         // pl.moveToPosition();
-        pl.plot_drawing(squareDrawingM, 10);
+        pl.plot_drawing(only_z, 2);
     }
 }
