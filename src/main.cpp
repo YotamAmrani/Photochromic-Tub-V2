@@ -65,11 +65,11 @@ void autoHoming(StepperController *stepper_c)
     stepper_c->setEnable(true);
     while (digitalRead(X_LIMIT_SW_PIN))
     {
-        stepper_c->moveStep(1, 1);
+        stepper_c->move_step(1, 1);
     }
     while (digitalRead(Y_LIMIT_SW_PIN))
     {
-        stepper_c->moveStep(2, 2);
+        stepper_c->move_step(2, 2);
     }
     stepper_c->setStepsCount(0, 0, 0);
     stepper_c->setEnable(false);
@@ -122,11 +122,11 @@ void loop()
 
     if (state.sys_mode == MOVE)
     {
-        stepper_c.moveStep(current_steps_mask, current_direction_mask);
+        stepper_c.move_step(current_steps_mask, current_direction_mask);
     }
     else if (state.sys_mode == PRINT)
     {
         // pl.moveToPosition();
-        pl.plotDrawing(squareDrawing, 10);
+        pl.plot_drawing(squareDrawing, 10);
     }
 }

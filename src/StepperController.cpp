@@ -83,7 +83,7 @@ void StepperController::step(int current_step_mask, int current_direction_mask)
   }
 }
 
-void StepperController::moveStep(int steps_mask, int current_direction_mask)
+void StepperController::move_step(int steps_mask, int current_direction_mask)
 {
   unsigned long currnet_time_stamp = micros();
   // start of movement

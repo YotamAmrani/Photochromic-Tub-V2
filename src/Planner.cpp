@@ -71,7 +71,7 @@ void Planner::move_to_position()
         segment_plan_->y_step_value += segment_plan_->dy;
         segment_plan_->z_step_value += segment_plan_->dz;
 
-        stepper_c_->moveStep(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
+        stepper_c_->move_step(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
     }
     else
     {
@@ -108,7 +108,7 @@ void Planner::load_drawing(int drawing_to_plot[][N_AXIS])
     current_drawing_ = (int **)drawing_to_plot;
 }
 
-void Planner::plotDrawing(int drawing_to_plot[][N_AXIS], int array_size)
+void Planner::plot_drawing(int drawing_to_plot[][N_AXIS], int array_size)
 {
     if (!finished_drawing_)
     {

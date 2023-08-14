@@ -36,7 +36,7 @@ public:
 
   void setEnable(bool isEnabled);
 
-  void moveStep(int steps_mask, int current_direction_mask);
+  void move_step(int steps_mask, int current_direction_mask);
 
   const int *getStepsCount() const;
   // https://stackoverflow.com/questions/10716769/c-difference-between-const-positioning

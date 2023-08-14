@@ -36,7 +36,7 @@ public:
     void load_drawing(int drawing_to_plot[][N_AXIS]);
     void move_to_position();
     int get_line_direction_mask(const int *point1, const int *point2);
-    void plotDrawing(int drawing_to_plot[][N_AXIS], int array_size);
+    void plot_drawing(int drawing_to_plot[][N_AXIS], int array_size);
 };
 
 #endif
