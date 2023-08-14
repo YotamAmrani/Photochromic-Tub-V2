@@ -114,10 +114,18 @@ void Planner::plot_drawing(int drawing_to_plot[][N_AXIS], int array_size)
     {
         if (!is_printing_ && current_segment_ < array_size)
         {
+            // Converting current target position into steps
+            const int target_to_steps[N_AXIS] = {
+                mm_to_steps(X_STEPS_PER_MM, drawing_to_plot[current_segment_][X_AXIS]),
+                mm_to_steps(Y_STEPS_PER_MM, drawing_to_plot[current_segment_][Y_AXIS]),
+                mm_to_steps(Z_STEPS_PER_MM, drawing_to_plot[current_segment_][Z_AXIS])};
+
             // start of segment
-            init_segment_plan(drawing_to_plot[current_segment_]);
+            // init_segment_plan(drawing_to_plot[current_segment_]);
+            init_segment_plan(target_to_steps);
             move_to_position();
             Serial.print("Finished segment:");
+            print_stepper();
             Serial.println(current_segment_);
             current_segment_++;
         }
@@ -127,6 +135,7 @@ void Planner::plot_drawing(int drawing_to_plot[][N_AXIS], int array_size)
         }
         else if (current_segment_ == array_size)
         {
+            print_stepper();
             Serial.println("Finished drawing!");
             current_drawing_ = nullptr;
             current_segment_ = 0;

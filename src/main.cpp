@@ -95,8 +95,6 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
 
-    // int mm_to_move = 100;
-    // int steps_to_move = mm_to_steps(mm_to_move, X_STEPS_PER_MM);
     unsigned long temp = 0;
     auto_homing(&stepper_c);
 
@@ -108,7 +106,7 @@ void setup()
 
     Serial.println(micros() - temp);
     temp = micros();
-    pl.load_drawing(squareDrawing);
+    pl.load_drawing(squareDrawingM);
 }
 
 void loop()
@@ -127,6 +125,6 @@ void loop()
     else if (state.sys_mode == PRINT)
     {
         // pl.moveToPosition();
-        pl.plot_drawing(squareDrawing, 10);
+        pl.plot_drawing(squareDrawingM, 10);
     }
 }
