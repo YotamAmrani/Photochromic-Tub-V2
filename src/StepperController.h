@@ -30,18 +30,18 @@ private:
 public:
   StepperController();
 
-  void setDirection(int current_direction_mask);
+  void set_direction(int current_direction_mask);
 
-  void setStepsRate(unsigned long steps_rate);
+  void set_steps_rate(unsigned long steps_rate);
 
-  void setEnable(bool isEnabled);
+  void set_enable(bool isEnabled);
 
   void move_step(int steps_mask, int current_direction_mask);
 
-  const int *getStepsCount() const;
+  const int *get_steps_count() const;
   // https://stackoverflow.com/questions/10716769/c-difference-between-const-positioning
 
-  void setStepsCount(int x_steps, int y_steps, int z_steps);
+  void set_steps_count(int x_steps, int y_steps, int z_steps);
 };
 
 #endif

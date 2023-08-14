@@ -13,7 +13,7 @@ Planner::Planner(StepperController *stepper_c, struct segment_plan *seg_pl)
 
 void Planner::print_stepper()
 {
-    const int *pos = stepper_c_->getStepsCount();
+    const int *pos = stepper_c_->get_steps_count();
     Serial.println("POS:");
     Serial.print(pos[X_AXIS]);
     Serial.print(",");
@@ -24,7 +24,7 @@ void Planner::print_stepper()
 
 void Planner::init_segment_plan(const int *target_pos)
 {
-    segment_plan_->current_position = stepper_c_->getStepsCount();
+    segment_plan_->current_position = stepper_c_->get_steps_count();
     segment_plan_->target_position = target_pos;
     segment_plan_->dx = abs(segment_plan_->current_position[X_AXIS] - target_pos[X_AXIS]);
     segment_plan_->dy = abs(segment_plan_->current_position[Y_AXIS] - target_pos[Y_AXIS]);
@@ -47,8 +47,8 @@ void Planner::move_to_position()
         if (!is_printing_)
         {
             is_printing_ = true;
-            stepper_c_->setEnable(true);
-            stepper_c_->setDirection(segment_plan_->current_direction_mask);
+            stepper_c_->set_enable(true);
+            stepper_c_->set_direction(segment_plan_->current_direction_mask);
         }
         segment_plan_->current_step_mask = 0;
         if (segment_plan_->dx && (segment_plan_->x_step_value >= segment_plan_->dominant_axis))
@@ -75,7 +75,7 @@ void Planner::move_to_position()
     }
     else
     {
-        stepper_c_->setEnable(false);
+        stepper_c_->set_enable(false);
         is_printing_ = false;
     }
 }
