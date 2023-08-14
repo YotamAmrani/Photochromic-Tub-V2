@@ -70,8 +70,8 @@ void Planner::move_to_position()
         segment_plan_->x_step_value += segment_plan_->dx;
         segment_plan_->y_step_value += segment_plan_->dy;
         segment_plan_->z_step_value += segment_plan_->dz;
-
         stepper_c_->move_step(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
+        // Serial.println(segment_plan_->current_step_mask);
     }
     else
     {
@@ -101,24 +101,37 @@ int Planner::get_line_direction_mask(const int *point1, const int *point2)
     return current_direction_mask;
 }
 
-void Planner::load_drawing(int drawing_to_plot[][N_AXIS])
+void Planner::load_drawing(int drawing_to_plot[][N_AXIS], int drawing_size)
 {
     Serial.println("Start printing!");
     finished_drawing_ = false;
-    current_drawing_ = (int **)drawing_to_plot;
+    current_drawing_ = drawing_to_plot;
+    current_drawing_size_ = drawing_size;
+    Serial.print("Current drawing: ");
+    Serial.print(current_drawing_[0][X_AXIS]);
+    Serial.print(",");
+    Serial.print(current_drawing_[0][Y_AXIS]);
+    Serial.print(",");
+    Serial.println(current_drawing_[0][Z_AXIS]);
+    Serial.print("inout drawing: ");
+    Serial.print(drawing_to_plot[0][X_AXIS]);
+    Serial.print(",");
+    Serial.print(drawing_to_plot[0][Y_AXIS]);
+    Serial.print(",");
+    Serial.println(drawing_to_plot[0][Z_AXIS]);
 }
 
-void Planner::plot_drawing(int drawing_to_plot[][N_AXIS], int array_size)
+void Planner::plot_drawing()
 {
     if (!finished_drawing_)
     {
-        if (!is_printing_ && current_segment_ < array_size)
+        if (!is_printing_ && current_segment_ < current_drawing_size_)
         {
             // Converting current target position into steps
             const int target_to_steps[N_AXIS] = {
-                mm_to_steps(X_STEPS_PER_MM, drawing_to_plot[current_segment_][X_AXIS]),
-                mm_to_steps(Y_STEPS_PER_MM, drawing_to_plot[current_segment_][Y_AXIS]),
-                mm_to_steps(Z_STEPS_PER_MM, drawing_to_plot[current_segment_][Z_AXIS])};
+                mm_to_steps(X_STEPS_PER_MM, current_drawing_[current_segment_][X_AXIS]),
+                mm_to_steps(Y_STEPS_PER_MM, current_drawing_[current_segment_][Y_AXIS]),
+                mm_to_steps(Z_STEPS_PER_MM, current_drawing_[current_segment_][Z_AXIS])};
 
             // start of segment
             // init_segment_plan(drawing_to_plot[current_segment_]);
@@ -133,11 +146,12 @@ void Planner::plot_drawing(int drawing_to_plot[][N_AXIS], int array_size)
         {
             move_to_position();
         }
-        else if (current_segment_ == array_size)
+        else if (current_segment_ == current_drawing_size_)
         {
             print_stepper();
             Serial.println("Finished drawing!");
             current_drawing_ = nullptr;
+            current_drawing_size_ = 0;
             current_segment_ = 0;
             finished_drawing_ = true;
             is_printing_ = false;

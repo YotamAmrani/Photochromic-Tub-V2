@@ -4,6 +4,9 @@
 #include "JoystickInterface.h"
 #include "Drawings.h"
 
+// #include "avr8-stub.h"
+// #include "app_api.h" // only needed with flash breakpoints
+
 // DEFINITIONS:
 void print_current_position();
 
@@ -106,7 +109,7 @@ void setup()
 
     Serial.println(micros() - temp);
     temp = micros();
-    pl.load_drawing(only_z);
+    pl.load_drawing(only_z, 2);
 }
 
 void loop()
@@ -124,7 +127,6 @@ void loop()
     }
     else if (state.sys_mode == PRINT)
     {
-        // pl.moveToPosition();
-        pl.plot_drawing(only_z, 2);
+        pl.plot_drawing();
     }
 }
