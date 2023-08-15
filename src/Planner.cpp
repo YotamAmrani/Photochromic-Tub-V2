@@ -24,6 +24,7 @@ void Planner::print_stepper()
 
 void Planner::init_segment_plan(const int *target_pos)
 {
+    print_steps();
     segment_plan_->current_position = stepper_c_->get_steps_count();
     segment_plan_->target_position[X_AXIS] = target_pos[X_AXIS];
     segment_plan_->target_position[Y_AXIS] = target_pos[Y_AXIS];
@@ -58,6 +59,17 @@ void Planner::print_segment()
     Serial.print(",");
     Serial.println(segment_plan_->z_step_value);
     Serial.println("--------------------------");
+}
+
+void Planner::print_steps()
+{
+    Serial.println("steps values:");
+    Serial.print(segment_plan_->x_step_value);
+    Serial.print(",");
+    Serial.print(segment_plan_->y_step_value);
+    Serial.print(",");
+    Serial.println(segment_plan_->z_step_value);
+    Serial.println("_________________________________");
 }
 
 void Planner::print_segment_positions()
@@ -107,9 +119,18 @@ void Planner::move_to_position()
             segment_plan_->z_step_value -= segment_plan_->dominant_axis;
         }
 
-        segment_plan_->x_step_value += segment_plan_->dx;
-        segment_plan_->y_step_value += segment_plan_->dy;
-        segment_plan_->z_step_value += segment_plan_->dz;
+        if (segment_plan_->current_position[X_AXIS] != segment_plan_->target_position[X_AXIS])
+        {
+            segment_plan_->x_step_value += segment_plan_->dx;
+        }
+        if (segment_plan_->current_position[Y_AXIS] != segment_plan_->target_position[Y_AXIS])
+        {
+            segment_plan_->y_step_value += segment_plan_->dy;
+        }
+        if (segment_plan_->current_position[Z_AXIS] != segment_plan_->target_position[Z_AXIS])
+        {
+            segment_plan_->z_step_value += segment_plan_->dz;
+        }
 
         stepper_c_->move_step(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
     }
@@ -148,7 +169,7 @@ void Planner::load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size)
     finished_drawing_ = false;
     current_drawing_ = drawing_to_plot;
     current_drawing_size_ = drawing_size;
-    stepper_c_->set_steps_rate(1500);
+    stepper_c_->set_steps_rate(2000);
 }
 
 void Planner::plot_drawing()
@@ -168,6 +189,7 @@ void Planner::plot_drawing()
             // init_segment_plan(drawing_to_plot[current_segment_]);
             init_segment_plan(target_to_steps);
             print_segment_positions();
+            print_segment();
             move_to_position();
             Serial.print("Finished segment: ");
             Serial.println(current_segment_);

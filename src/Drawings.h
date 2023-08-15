@@ -1,5 +1,6 @@
 #ifndef DRAWINGS_H
 #define DRAWINGS_H
+#include "Settings.h"
 
 int squareDrawing[10][N_AXIS] = {{100, 100, 0},
                                  {2000, 100, 0},
@@ -22,9 +23,11 @@ int squareDrawingM[10][N_AXIS] = {{5, 5, 0},
                                   {25, 25, 10},
                                   {5, 25, 10},
                                   {5, 5, 10}};
-double only_z[2][N_AXIS] = {
-    {35.17, 38.75, 0},
-    {0, 0, 10}};
+double only_z[4][N_AXIS] = {
+    {37.49, 45.24, 16.36},
+    {33.61, 44.41, 16.86},
+    {29.73, 43.59, 17.37},
+    {25.85, 42.76, 17.88}};
 
 double testing[25][N_AXIS] = {{35.17, 38.75, 0},
                               {31.58, 39.78, 1.44},

@@ -35,6 +35,7 @@ public:
     Planner(StepperController *stepper_c, struct segment_plan *seg_pl);
     void print_stepper();
     void print_segment();
+    void print_steps();
     void print_segment_positions();
     void init_segment_plan(const int *target_pos);
     void load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size);

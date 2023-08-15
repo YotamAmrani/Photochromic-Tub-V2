@@ -3,6 +3,7 @@
 #include "Planner.h"
 #include "JoystickInterface.h"
 #include "Drawings.h"
+#include "Settings.h"
 
 // #include "avr8-stub.h"
 // #include "app_api.h" // only needed with flash breakpoints
@@ -106,7 +107,7 @@ void setup()
     stepper_c.set_enable(true);
     state.sys_mode = PRINT;
 
-    pl.load_drawing(only_z, 2);
+    pl.load_drawing(testing, 25);
 }
 
 void loop()

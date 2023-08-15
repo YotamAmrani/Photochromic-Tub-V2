@@ -87,12 +87,11 @@ void StepperController::move_step(int steps_mask, int current_direction_mask)
 {
   unsigned long currnet_time_stamp = micros();
   // start of movement
-  if (steps_mask != 0 && move_time_stamp_ == 0)
-
+  if ((steps_mask != 0 || current_direction_mask != 0) && move_time_stamp_ == 0)
   {
     move_time_stamp_ = micros();
   }
-  else if (move_time_stamp_ != 0 && currnet_time_stamp - move_time_stamp_ > steps_rate_)
+  else if ((steps_mask != 0 || current_direction_mask != 0) && currnet_time_stamp - move_time_stamp_ > steps_rate_)
   {
     //          || currnet_time_stamp < _stepper_config -> move_time_stamp
     this->set_direction(current_direction_mask);
