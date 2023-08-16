@@ -13,13 +13,13 @@ void print_current_position();
 
 sys_state state = {IDLE, 0};
 StepperController stepper_c = StepperController();
-int target[N_AXIS] = {1406, 1550, 0};
+int current_steps_mask = 0;
+int current_direction_mask = 0;
+// int target[N_AXIS] = {1406, 1550, 0};
+int target[N_AXIS] = {0, 0, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
-
-int current_steps_mask = 0;
-int current_direction_mask = 0;
 
 void state_handler(int current_steps_mask, StepperController *stepper_c)
 {
@@ -100,32 +100,31 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
 
-    auto_homing(&stepper_c);
+    // auto_homing(&stepper_c);
 
     pl.init_segment_plan(target);
-    pl.print_stepper();
+    // pl.is_segment_printing_ = true;
+    pl.load_drawing(testing, 25);
     stepper_c.set_enable(true);
     state.sys_mode = PRINT;
 
-    pl.load_drawing(testing, 25);
-    // while (!pl.is_drawing_finished())
+    // for (int i = 0; i < 25; i++)
     // {
-    //     /** GET INPUT MASK **/
-    //     current_steps_mask = 0;
-    //     current_direction_mask = 0;
-    //     getMovementMask(&current_steps_mask, &current_direction_mask);
-    //     state_handler(current_steps_mask, &stepper_c);
-    //     toggle_led(&state);
-
-    //     if (state.sys_mode == MOVE)
+    //     const int target_to_steps[N_AXIS] = {
+    //         int(mm_to_steps(X_STEPS_PER_MM, testing[i][X_AXIS])),
+    //         int(mm_to_steps(Y_STEPS_PER_MM, testing[i][Y_AXIS])),
+    //         int(mm_to_steps(Z_STEPS_PER_MM, testing[i][Z_AXIS]))};
+    //     pl.init_segment_plan(target_to_steps);
+    //     pl.print_segment();
+    //     // pl.is_segment_printing_ = true;
+    //     do
     //     {
-    //         stepper_c.move_step(current_steps_mask, current_direction_mask);
-    //     }
-    //     else if (state.sys_mode == PRINT)
-    //     {
-    //         pl.plot_drawing();
-    //     }
+    //         pl.move_to_position();
+    //     } while (pl.is_segment_printing_);
+    //     Serial.println(i);
+    //     // Serial.println(i);
     // }
+    // Serial.println("DONE");
 }
 
 void loop()
@@ -133,7 +132,7 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    getMovementMask(&current_steps_mask, &current_direction_mask);
+    // getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
     toggle_led(&state);
 
@@ -144,5 +143,6 @@ void loop()
     else if (state.sys_mode == PRINT)
     {
         pl.plot_drawing();
+        // pl.move_to_position();
     }
 }

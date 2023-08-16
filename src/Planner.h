@@ -28,10 +28,11 @@ private:
     // https://stackoverflow.com/questions/22975633/reference-to-a-static-2d-array
     int current_drawing_size_;
     int current_segment_;
-    bool is_printing_;
+
     bool finished_drawing_;
 
 public:
+    bool is_segment_printing_;
     Planner(StepperController *stepper_c, struct segment_plan *seg_pl);
     void print_stepper();
     void print_segment();
