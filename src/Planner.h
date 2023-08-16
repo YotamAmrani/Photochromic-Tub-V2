@@ -42,6 +42,7 @@ public:
     void move_to_position();
     int get_line_direction_mask(const int *point1, const int *point2);
     void plot_drawing();
+    bool is_drawing_finished();
 };
 
 #endif

@@ -108,6 +108,24 @@ void setup()
     state.sys_mode = PRINT;
 
     pl.load_drawing(testing, 25);
+    // while (!pl.is_drawing_finished())
+    // {
+    //     /** GET INPUT MASK **/
+    //     current_steps_mask = 0;
+    //     current_direction_mask = 0;
+    //     getMovementMask(&current_steps_mask, &current_direction_mask);
+    //     state_handler(current_steps_mask, &stepper_c);
+    //     toggle_led(&state);
+
+    //     if (state.sys_mode == MOVE)
+    //     {
+    //         stepper_c.move_step(current_steps_mask, current_direction_mask);
+    //     }
+    //     else if (state.sys_mode == PRINT)
+    //     {
+    //         pl.plot_drawing();
+    //     }
+    // }
 }
 
 void loop()

@@ -169,7 +169,7 @@ void Planner::load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size)
     finished_drawing_ = false;
     current_drawing_ = drawing_to_plot;
     current_drawing_size_ = drawing_size;
-    stepper_c_->set_steps_rate(2000);
+    stepper_c_->set_steps_rate(700);
 }
 
 void Planner::plot_drawing()
@@ -197,6 +197,7 @@ void Planner::plot_drawing()
         }
         else if (is_printing_)
         {
+
             move_to_position();
         }
         else if (current_segment_ == current_drawing_size_)
@@ -210,4 +211,9 @@ void Planner::plot_drawing()
             is_printing_ = false;
         }
     }
+}
+
+bool Planner::is_drawing_finished()
+{
+    return finished_drawing_;
 }

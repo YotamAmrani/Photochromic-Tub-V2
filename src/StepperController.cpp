@@ -56,42 +56,59 @@ const int *StepperController::get_steps_count() const
 }
 
 /*    MOVEMENT METHODS    **/
+// void StepperController::step(int current_step_mask, int current_direction_mask)
+// {
+//   unsigned long currnet_time_stamp = micros();
+//   // start of pulse
+//   if (pulse_time_stamp_ == 0)
+//   {
+//     pulse_time_stamp_ = micros();
+//     digitalWrite(step_pin_[X_AXIS], bit_istrue(current_step_mask, 1 << X_AXIS));
+//     digitalWrite(step_pin_[Y_AXIS], bit_istrue(current_step_mask, 1 << Y_AXIS));
+//     digitalWrite(step_pin_[Z_AXIS], bit_istrue(current_step_mask, 1 << Z_AXIS));
+//     // count motors steps
+//     // need to flip when direction bit is on
+//     steps_counter_[X_AXIS] += bit_to_sign(current_direction_mask, 1 << X_AXIS) * bit_istrue(current_step_mask, 1 << X_AXIS);
+//     steps_counter_[Y_AXIS] += bit_to_sign(current_direction_mask, 1 << Y_AXIS) * bit_istrue(current_step_mask, 1 << Y_AXIS);
+//     steps_counter_[Z_AXIS] += bit_to_sign(current_direction_mask, 1 << Z_AXIS) * bit_istrue(current_step_mask, 1 << Z_AXIS);
+//   }
+//   // end pulse
+//   // in case that the pulse time was ended OR in case that the micros value was overflowed complete the pulse
+//   if (currnet_time_stamp - pulse_time_stamp_ > STEP_PULSE_LENGTH || currnet_time_stamp < pulse_time_stamp_)
+//   {
+//     digitalWrite(step_pin_[X_AXIS], LOW);
+//     digitalWrite(step_pin_[Y_AXIS], LOW);
+//     digitalWrite(step_pin_[Z_AXIS], LOW);
+//     pulse_time_stamp_ = 0;
+//   }
+// }
+
 void StepperController::step(int current_step_mask, int current_direction_mask)
 {
-  unsigned long currnet_time_stamp = micros();
   // start of pulse
-  if (pulse_time_stamp_ == 0)
-  {
-    pulse_time_stamp_ = micros();
-    digitalWrite(step_pin_[X_AXIS], bit_istrue(current_step_mask, 1 << X_AXIS));
-    digitalWrite(step_pin_[Y_AXIS], bit_istrue(current_step_mask, 1 << Y_AXIS));
-    digitalWrite(step_pin_[Z_AXIS], bit_istrue(current_step_mask, 1 << Z_AXIS));
-    // count motors steps
-    // need to flip when direction bit is on
-    steps_counter_[X_AXIS] += bit_to_sign(current_direction_mask, 1 << X_AXIS) * bit_istrue(current_step_mask, 1 << X_AXIS);
-    steps_counter_[Y_AXIS] += bit_to_sign(current_direction_mask, 1 << Y_AXIS) * bit_istrue(current_step_mask, 1 << Y_AXIS);
-    steps_counter_[Z_AXIS] += bit_to_sign(current_direction_mask, 1 << Z_AXIS) * bit_istrue(current_step_mask, 1 << Z_AXIS);
-  }
+  digitalWrite(step_pin_[X_AXIS], bit_istrue(current_step_mask, 1 << X_AXIS));
+  digitalWrite(step_pin_[Y_AXIS], bit_istrue(current_step_mask, 1 << Y_AXIS));
+  digitalWrite(step_pin_[Z_AXIS], bit_istrue(current_step_mask, 1 << Z_AXIS));
+  // count motors steps, flip when direction bit is on
+  steps_counter_[X_AXIS] += bit_to_sign(current_direction_mask, 1 << X_AXIS) * bit_istrue(current_step_mask, 1 << X_AXIS);
+  steps_counter_[Y_AXIS] += bit_to_sign(current_direction_mask, 1 << Y_AXIS) * bit_istrue(current_step_mask, 1 << Y_AXIS);
+  steps_counter_[Z_AXIS] += bit_to_sign(current_direction_mask, 1 << Z_AXIS) * bit_istrue(current_step_mask, 1 << Z_AXIS);
+  delayMicroseconds(STEP_PULSE_LENGTH);
   // end pulse
-  // in case that the pulse time was ended OR in case that the micros value was overflowed complete the pulse
-  if (currnet_time_stamp - pulse_time_stamp_ > STEP_PULSE_LENGTH || currnet_time_stamp < pulse_time_stamp_)
-  {
-    digitalWrite(step_pin_[X_AXIS], LOW);
-    digitalWrite(step_pin_[Y_AXIS], LOW);
-    digitalWrite(step_pin_[Z_AXIS], LOW);
-    pulse_time_stamp_ = 0;
-  }
+  digitalWrite(step_pin_[X_AXIS], LOW);
+  digitalWrite(step_pin_[Y_AXIS], LOW);
+  digitalWrite(step_pin_[Z_AXIS], LOW);
 }
 
 void StepperController::move_step(int steps_mask, int current_direction_mask)
 {
   unsigned long currnet_time_stamp = micros();
   // start of movement
-  if ((steps_mask != 0 || current_direction_mask != 0) && move_time_stamp_ == 0)
+  if (steps_mask != 0 && move_time_stamp_ == 0)
   {
     move_time_stamp_ = micros();
   }
-  else if ((steps_mask != 0 || current_direction_mask != 0) && currnet_time_stamp - move_time_stamp_ > steps_rate_)
+  else if (steps_mask != 0 && currnet_time_stamp - move_time_stamp_ > steps_rate_)
   {
     //          || currnet_time_stamp < _stepper_config -> move_time_stamp
     this->set_direction(current_direction_mask);
