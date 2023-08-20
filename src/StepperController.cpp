@@ -80,37 +80,6 @@ void StepperController::move_step(int steps_mask, int current_direction_mask)
     this->step(steps_mask, current_direction_mask); // Send step
     move_time_stamp_ = micros();                    // reset timer
   }
-  // if (move_time_stamp_ && (micros() - move_time_stamp_ > steps_rate_))
-  // {
-  //   this->step(steps_mask, current_direction_mask); // Send step
-  //   move_time_stamp_ = 0;                           // reset timer
-  //   // Serial.println(move_time_stamp_);
-  // }
-  // if (!move_time_stamp_ && steps_mask)
-  // {
-  //   move_time_stamp_ = micros();
-  //   // Serial.println(move_time_stamp_);
-  // }
-  // if (steps_mask == 0 && move_time_stamp_)
-  // {
-  //   Serial.println("F");
-  // }
-  // if (steps_mask == 0 && move_time_stamp_ == 0)
-  // {
-  //   // Serial.println("A");
-  //   move_time_stamp_ = micros();
-  // }
-  // if (steps_mask != 0 && move_time_stamp_)
-  // {
-  //   Serial.println("B");
-  // }
-  // if (steps_mask != 0 && move_time_stamp_ == 0)
-  // {
-  //   Serial.println("C");
-  // }
-  // In this state A does not appear, if i'll remove the upper condition (&& steps_mask)
-  //  from the first if, it will appear - and we are getting locked!
-  //  C does not appear in all cases
 }
 
 // void StepperController::move_step(int steps_mask, int current_direction_mask)

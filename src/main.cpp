@@ -1,25 +1,23 @@
 #include <Arduino.h>
-#include "StepperController.h"
+#include "Stepper.h"
 #include "Planner.h"
 #include "JoystickInterface.h"
 #include "Drawings.h"
 #include "Settings.h"
 
-// #include "avr8-stub.h"
-// #include "app_api.h" // only needed with flash breakpoints
-
 // DEFINITIONS:
 void print_current_position();
 
 sys_state state = {IDLE, 0};
-StepperController stepper_c = StepperController();
-int current_steps_mask = 0;
-int current_direction_mask = 0;
-// int target[N_AXIS] = {1406, 1550, 0};
-int target[N_AXIS] = {0, 0, 0};
-const int *current_position = stepper_c.get_steps_count();
+int current_steps_mask[N_AXIS] = {0};
+int target_position[N_AXIS] = {0};
+int current_position[N_AXIS] = {0};
+Stepper axis[N_AXIS] = {Stepper(X_STEP_PIN, X_DIR_PIN, EN_PIN, false),
+                        Stepper(Y_STEP_PIN, Y_DIR_PIN, EN_PIN, true),
+                        Stepper(Z_STEP_PIN, Z_DIR_PIN, EN_PIN, false)};
+
 segment_plan seg_p = {0};
-Planner pl = Planner(&stepper_c, &seg_p);
+// Planner pl = Planner(&stepper_c, &seg_p);
 
 void state_handler(int current_steps_mask, StepperController *stepper_c)
 {
@@ -108,42 +106,25 @@ void setup()
     pl.load_drawing(testing, 25);
     stepper_c.set_enable(true);
     state.sys_mode = PRINT;
-
-    // for (int i = 0; i < 25; i++)
-    // {
-    //     const int target_to_steps[N_AXIS] = {
-    //         int(mm_to_steps(X_STEPS_PER_MM, testing[i][X_AXIS])),
-    //         int(mm_to_steps(Y_STEPS_PER_MM, testing[i][Y_AXIS])),
-    //         int(mm_to_steps(Z_STEPS_PER_MM, testing[i][Z_AXIS]))};
-    //     pl.init_segment_plan(target_to_steps);
-    //     pl.print_segment();
-    //     // pl.is_segment_printing_ = true;
-    //     do
-    //     {
-    //         pl.move_to_position();
-    //     } while (pl.is_segment_printing_);
-    //     Serial.println(i);
-    //     // Serial.println(i);
-    // }
-    // Serial.println("DONE");
 }
 
 void loop()
 {
     /** GET INPUT MASK **/
-    current_steps_mask = 0;
-    current_direction_mask = 0;
+    current_steps_mask[X_AXIS] = 0;
+    current_steps_mask[Y_AXIS] = 0;
+    current_steps_mask[Z_AXIS] = 0;
     // getMovementMask(&current_steps_mask, &current_direction_mask);
-    state_handler(current_steps_mask, &stepper_c);
+    // state_handler(current_steps_mask, &stepper_c);
     toggle_led(&state);
 
     if (state.sys_mode == MOVE)
     {
-        stepper_c.move_step(current_steps_mask, current_direction_mask);
+        // stepper_c.move_step(current_steps_mask, current_direction_mask);
     }
     else if (state.sys_mode == PRINT)
     {
-        pl.plot_drawing();
+        // pl.plot_drawing();
         // pl.move_to_position();
     }
 }
