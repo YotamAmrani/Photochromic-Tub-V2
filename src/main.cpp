@@ -3,25 +3,31 @@
 #include "Planner.h"
 #include "JoystickInterface.h"
 #include "Drawings.h"
+#include "Settings.h"
+
+// #include "avr8-stub.h"
+// #include "app_api.h" // only needed with flash breakpoints
 
 // DEFINITIONS:
-void printCurrentPosition();
+void print_current_position();
 
 sys_state state = {IDLE, 0};
 StepperController stepper_c = StepperController();
-int target[N_AXIS] = {2500, 2500, 0};
+int current_steps_mask = 0;
+int current_direction_mask = 0;
+// int target[N_AXIS] = {1406, 1550, 0};
+int target[N_AXIS] = {0, 0, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
 
-int current_steps_mask = 0;
-int current_direction_mask = 0;
-
-void stateHandler(int current_steps_mask, StepperController *stepper_c)
+void state_handler(int current_steps_mask, StepperController *stepper_c)
 {
     // if movement was deteced
     if (current_steps_mask)
     {
+        stepper_c->set_enable(true);
+        // print_current_position();
         stepper_c->set_enable(true);
         if (state.sys_mode == IDLE)
         {
@@ -46,7 +52,7 @@ void stateHandler(int current_steps_mask, StepperController *stepper_c)
     }
 }
 
-void toggleLed(sys_state *state)
+void toggle_led(sys_state *state)
 {
     if (!digitalRead(LED_PIN) && state->sys_mode == MOVE)
     {
@@ -58,7 +64,7 @@ void toggleLed(sys_state *state)
     }
 }
 
-void autoHoming(StepperController *stepper_c)
+void auto_homing(StepperController *stepper_c)
 {
     Serial.println("Auto homing! ");
     stepper_c->set_steps_rate(AUTO_HOME_STEPS_RATE);
@@ -74,10 +80,10 @@ void autoHoming(StepperController *stepper_c)
     stepper_c->set_steps_count(0, 0, 0);
     stepper_c->set_enable(false);
     stepper_c->set_steps_rate(STEPS_RATE);
-    printCurrentPosition();
+    print_current_position();
 }
 
-void printCurrentPosition()
+void print_current_position()
 {
     Serial.println("Position: ");
     Serial.print(stepper_c.get_steps_count()[X_AXIS]);
@@ -95,19 +101,31 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
 
-    // int mm_to_move = 100;
-    // int steps_to_move = mm_to_steps(mm_to_move, X_STEPS_PER_MM);
-    unsigned long temp = 0;
-    autoHoming(&stepper_c);
+    // auto_homing(&stepper_c);
 
-    pl.initialze_segment_plan(target);
-    pl.print_stepper();
-    temp = micros();
+    pl.init_segment_plan(target);
+    // pl.is_segment_printing_ = true;
+    pl.load_drawing(testing, 25);
     stepper_c.set_enable(true);
     state.sys_mode = PRINT;
-    Serial.println(micros() - temp);
-    temp = micros();
-    pl.load_drawing(squareDrawingM);
+
+    // for (int i = 0; i < 25; i++)
+    // {
+    //     const int target_to_steps[N_AXIS] = {
+    //         int(mm_to_steps(X_STEPS_PER_MM, testing[i][X_AXIS])),
+    //         int(mm_to_steps(Y_STEPS_PER_MM, testing[i][Y_AXIS])),
+    //         int(mm_to_steps(Z_STEPS_PER_MM, testing[i][Z_AXIS]))};
+    //     pl.init_segment_plan(target_to_steps);
+    //     pl.print_segment();
+    //     // pl.is_segment_printing_ = true;
+    //     do
+    //     {
+    //         pl.move_to_position();
+    //     } while (pl.is_segment_printing_);
+    //     Serial.println(i);
+    //     // Serial.println(i);
+    // }
+    // Serial.println("DONE");
 }
 
 void loop()
@@ -115,9 +133,9 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    getMovementMask(&current_steps_mask, &current_direction_mask);
-    stateHandler(current_steps_mask, &stepper_c);
-    toggleLed(&state);
+    // getMovementMask(&current_steps_mask, &current_direction_mask);
+    state_handler(current_steps_mask, &stepper_c);
+    toggle_led(&state);
 
     if (state.sys_mode == MOVE)
     {
@@ -125,6 +143,7 @@ void loop()
     }
     else if (state.sys_mode == PRINT)
     {
-        pl.plot_drawing(squareDrawingM, 10);
+        pl.plot_drawing();
+        // pl.move_to_position();
     }
 }

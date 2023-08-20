@@ -24,18 +24,18 @@
 #define Y_LIMIT_SW_PIN 10
 
 // JOYSTICK PINS
-#define X_INPUT_PIN A2
-#define Y_INPUT_PIN A3
-#define Z_INPUT_PIN A4
+#define X_INPUT_PIN A1
+#define Y_INPUT_PIN A2
+#define Z_INPUT_PIN A3
 #define X_IDLE_VALUE 445
-#define Y_IDLE_VALUE 155
+#define Y_IDLE_VALUE 445
 #define LEFT_VALUE 835
 #define RIGHT_VALUE 0
-#define FORWARD_VALUE 595
+#define FORWARD_VALUE 835
 #define BACK_VALUE 0
 #define DOWN_VALUE 835
 #define UP_VALUE 0
-#define X_NOISE 250
+#define X_NOISE 100
 #define Y_NOISE 100
 
 // #define LED_INPUT_PIN A4
@@ -46,12 +46,12 @@
 #define LED_DEBOUNCE_TIME 300
 
 // SYSTEM CONFIGURATIONS
-#define STEP_PULSE_LENGTH 5
+#define STEP_PULSE_LENGTH 20
 #define STEPS_RATE 500
 #define AUTO_HOME_STEPS_RATE 1500
 #define X_STEPS_PER_MM 40
 #define Y_STEPS_PER_MM 40
-#define Z_STEPS_PER_MM 10
+#define Z_STEPS_PER_MM 100
 #define steps_to_mm(steps, ratio) (steps / ratio)
 #define mm_to_steps(mm, ratio) (mm * ratio)
 

@@ -15,16 +15,15 @@ struct step_plan
 class StepperController
 {
 private:
-  // struct stepper_config *_stepper_config;
   const int step_pin_[N_AXIS];
   const int dir_pin_[N_AXIS];
   const int en_pin_;
-  unsigned long pulse_time_stamp_;
   unsigned long move_time_stamp_;
   unsigned long steps_rate_;
   int steps_counter_[N_AXIS];
 
   void step(int current_step_mask, int current_direction_mask);
+  int get_line_direction_mask(const int *point1, const int *point2);
 
 public:
   StepperController();
