@@ -30,6 +30,8 @@ public:
 
     void set_direction(int step_mask);
 
+    int get_direction();
+
     void set_steps_rate(unsigned long steps_rate);
 
     void move_step(int steps_mask);

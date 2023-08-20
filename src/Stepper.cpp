@@ -19,6 +19,7 @@ void Stepper::set_steps_rate(unsigned long steps_rate)
     if (steps_rate >= 0)
     {
         steps_rate_ = steps_rate;
+        Serial.println(steps_rate_);
     }
 }
 
@@ -49,6 +50,16 @@ int Stepper::get_steps_count()
     return steps_counter_;
 }
 
+int Stepper::get_direction()
+{
+    int direction = digitalRead(dir_pin_) ? -1 : 1;
+    if (invert_direction_)
+    {
+        direction *= -1;
+    }
+    return direction;
+}
+
 /*    MOVEMENT METHODS    **/
 void Stepper::step(int step_mask)
 {
@@ -65,5 +76,9 @@ void Stepper::move_step(int step_mask)
     {
         this->step(step_mask);       // Send step
         move_time_stamp_ = micros(); // reset timer
+    }
+    else
+    {
+        Serial.println(micros() - move_time_stamp_);
     }
 }
