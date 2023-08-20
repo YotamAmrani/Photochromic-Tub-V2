@@ -15,7 +15,6 @@ sys_state state = {IDLE, 0};
 StepperController stepper_c = StepperController();
 int current_steps_mask = 0;
 int current_direction_mask = 0;
-// int target[N_AXIS] = {1406, 1550, 0};
 int target[N_AXIS] = {0, 0, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
@@ -26,12 +25,12 @@ void state_handler(int current_steps_mask, StepperController *stepper_c)
     // if movement was deteced
     if (current_steps_mask)
     {
-        stepper_c->set_enable(true);
-        // print_current_position();
+
         stepper_c->set_enable(true);
         if (state.sys_mode == IDLE)
         {
             state.sys_mode = MOVE;
+            toggle_led(); // turn led on
         }
         else if (state.sys_mode == PRINT)
         {
@@ -45,16 +44,28 @@ void state_handler(int current_steps_mask, StepperController *stepper_c)
     {
         if (state.sys_mode == MOVE && (millis() - state.last_move_time_stamp) > LED_DEBOUNCE_TIME)
         {
-
             state.sys_mode = IDLE;
             stepper_c->set_enable(false);
+            toggle_led(); // turn led off
         }
     }
 }
 
-void toggle_led(sys_state *state)
+// void toggle_led(sys_state *state)
+// {
+//     if (!digitalRead(LED_PIN) && state->sys_mode == MOVE)
+//     {
+//         analogWrite(LED_PIN, LED_TURN_ON_VALUE);
+//     }
+//     else
+//     {
+//         analogWrite(LED_PIN, LOW);
+//     }
+// }
+
+void toggle_led()
 {
-    if (!digitalRead(LED_PIN) && state->sys_mode == MOVE)
+    if (!digitalRead(LED_PIN))
     {
         analogWrite(LED_PIN, LED_TURN_ON_VALUE);
     }
@@ -108,24 +119,6 @@ void setup()
     pl.load_drawing(testing, 25);
     stepper_c.set_enable(true);
     state.sys_mode = PRINT;
-
-    // for (int i = 0; i < 25; i++)
-    // {
-    //     const int target_to_steps[N_AXIS] = {
-    //         int(mm_to_steps(X_STEPS_PER_MM, testing[i][X_AXIS])),
-    //         int(mm_to_steps(Y_STEPS_PER_MM, testing[i][Y_AXIS])),
-    //         int(mm_to_steps(Z_STEPS_PER_MM, testing[i][Z_AXIS]))};
-    //     pl.init_segment_plan(target_to_steps);
-    //     pl.print_segment();
-    //     // pl.is_segment_printing_ = true;
-    //     do
-    //     {
-    //         pl.move_to_position();
-    //     } while (pl.is_segment_printing_);
-    //     Serial.println(i);
-    //     // Serial.println(i);
-    // }
-    // Serial.println("DONE");
 }
 
 void loop()
@@ -135,15 +128,20 @@ void loop()
     current_direction_mask = 0;
     // getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
-    toggle_led(&state);
+    // toggle_led(&state);
 
-    if (state.sys_mode == MOVE)
+    switch (state.sys_mode)
     {
+    case MOVE:
         stepper_c.move_step(current_steps_mask, current_direction_mask);
-    }
-    else if (state.sys_mode == PRINT)
-    {
+        break;
+    case PRINT:
         pl.plot_drawing();
-        // pl.move_to_position();
+        break;
+    case IDLE:
+        // code block
+        break;
+    default:
+        // code block
     }
 }

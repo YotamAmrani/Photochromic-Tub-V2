@@ -23,7 +23,6 @@ private:
   int steps_counter_[N_AXIS];
 
   void step(int current_step_mask, int current_direction_mask);
-  int get_line_direction_mask(const int *point1, const int *point2);
 
 public:
   StepperController();
