@@ -204,7 +204,7 @@ void Planner::load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size)
     finished_drawing_ = false;
     current_drawing_ = drawing_to_plot;
     current_drawing_size_ = drawing_size;
-    stepper_c_->set_steps_rate(1500);
+    stepper_c_->set_steps_rate(700);
 }
 
 void Planner::plot_drawing()

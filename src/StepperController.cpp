@@ -75,12 +75,11 @@ void StepperController::step(int current_step_mask, int current_direction_mask)
 void StepperController::move_step(int steps_mask, int current_direction_mask)
 {
   // turn sed pulse
-  if ((micros() - move_time_stamp_ > steps_rate_))
+  if (steps_mask && (micros() - move_time_stamp_ > steps_rate_))
   {
-    if (steps_mask)
-    {
-      this->step(steps_mask, current_direction_mask); // Send step
-    }
+
+    this->step(steps_mask, current_direction_mask); // Send step
+
     move_time_stamp_ = micros(); // reset timer
   }
   // if (move_time_stamp_ && (micros() - move_time_stamp_ > steps_rate_))
