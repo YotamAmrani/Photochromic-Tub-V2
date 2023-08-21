@@ -131,6 +131,7 @@ void setup()
 
 void loop()
 {
+    // long unsigned int t = micros();
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
@@ -153,4 +154,5 @@ void loop()
         // code block
         break;
     }
+    // Serial.println(micros() - t);
 }
