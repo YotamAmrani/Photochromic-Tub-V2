@@ -77,6 +77,7 @@ void StepperController::move_step(int steps_mask, int current_direction_mask)
   // turn sed pulse
   if (steps_mask && (micros() - move_time_stamp_ > steps_rate_))
   {
+    set_direction(current_direction_mask);
     this->step(steps_mask, current_direction_mask); // Send step
     move_time_stamp_ = micros();                    // reset timer
   }

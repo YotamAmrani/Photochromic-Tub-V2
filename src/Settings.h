@@ -27,16 +27,14 @@
 #define X_INPUT_PIN A1
 #define Y_INPUT_PIN A2
 #define Z_INPUT_PIN A3
-#define X_IDLE_VALUE 445
-#define Y_IDLE_VALUE 445
+#define IDLE_VALUE 445
 #define LEFT_VALUE 835
 #define RIGHT_VALUE 0
 #define FORWARD_VALUE 835
 #define BACK_VALUE 0
 #define DOWN_VALUE 835
 #define UP_VALUE 0
-#define X_NOISE 100
-#define Y_NOISE 100
+#define NOISE_VALUE 100
 
 // #define LED_INPUT_PIN A4
 

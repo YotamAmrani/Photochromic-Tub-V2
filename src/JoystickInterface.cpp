@@ -39,34 +39,34 @@ void getMovementMask(int *current_steps_mask, int *current_direction_mask)
   int z_input = analogRead(Z_INPUT_PIN);
 
   /* Move X AXIS */
-  if (x_input > (X_IDLE_VALUE + 100))
+  if (x_input > (IDLE_VALUE + 100))
   {
     *current_steps_mask = *current_steps_mask | (1 << X_AXIS);
     *current_direction_mask = *current_direction_mask | (1 << X_AXIS);
   }
-  else if (x_input < (X_IDLE_VALUE - X_NOISE))
+  else if (x_input < (IDLE_VALUE - NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << X_AXIS);
   }
 
   /* Move Y AXIS */
-  if (y_input > (Y_IDLE_VALUE + Y_NOISE))
+  if (y_input > (IDLE_VALUE + NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << Y_AXIS);
   }
-  else if (y_input < (Y_IDLE_VALUE - Y_NOISE))
+  else if (y_input < (IDLE_VALUE - NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << Y_AXIS);
     *current_direction_mask = *current_direction_mask | (1 << Y_AXIS);
   }
 
   /* Move Z AXIS */
-  if (z_input > (X_IDLE_VALUE + 100))
+  if (z_input > (IDLE_VALUE + 100))
   {
     *current_steps_mask = *current_steps_mask | (1 << Z_AXIS);
     *current_direction_mask = *current_direction_mask | (1 << Z_AXIS);
   }
-  else if (z_input < (X_IDLE_VALUE - X_NOISE))
+  else if (z_input < (IDLE_VALUE - NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << Z_AXIS);
   }
@@ -78,22 +78,22 @@ void getMovementMaskD(int *current_steps_mask, int *current_direction_mask)
   *current_direction_mask = 0;
 
   /* Move X AXIS */
-  if (digitalRead(X_INPUT_PIN) > (X_IDLE_VALUE + 100))
+  if (digitalRead(X_INPUT_PIN) > (IDLE_VALUE + 100))
   {
     *current_steps_mask = *current_steps_mask | (1 << X_AXIS);
     *current_direction_mask = *current_direction_mask | (1 << X_AXIS);
   }
-  else if (digitalRead(X_INPUT_PIN) < (X_IDLE_VALUE - X_NOISE))
+  else if (digitalRead(X_INPUT_PIN) < (IDLE_VALUE - NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << X_AXIS);
   }
 
   /* Move Y AXIS */
-  if (digitalRead(Y_INPUT_PIN) > (Y_IDLE_VALUE + Y_NOISE))
+  if (digitalRead(Y_INPUT_PIN) > (IDLE_VALUE + NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << Y_AXIS);
   }
-  else if (digitalRead(Y_INPUT_PIN) < (Y_IDLE_VALUE - Y_NOISE))
+  else if (digitalRead(Y_INPUT_PIN) < (IDLE_VALUE - NOISE_VALUE))
   {
     *current_steps_mask = *current_steps_mask | (1 << Y_AXIS);
     *current_direction_mask = *current_direction_mask | (1 << Y_AXIS);
