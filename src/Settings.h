@@ -50,9 +50,12 @@
 #define X_STEPS_PER_MM 40
 #define Y_STEPS_PER_MM 40
 #define Z_STEPS_PER_MM 100
+
+// AUTO PRINTING
+#define PENDING_TIME (1000000 * 180)
+
 #define steps_to_mm(steps, ratio) (steps / ratio)
 #define mm_to_steps(mm, ratio) (mm * ratio)
-
 template <typename T>
 int sgn(T val)
 {

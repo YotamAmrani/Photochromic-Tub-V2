@@ -28,7 +28,6 @@ private:
     // https://stackoverflow.com/questions/22975633/reference-to-a-static-2d-array
     int current_drawing_size_;
     int current_segment_;
-
     bool finished_drawing_;
 
 public:
@@ -44,6 +43,7 @@ public:
     int get_line_direction_mask(const int *point1, const int *point2);
     void plot_drawing();
     bool is_drawing_finished();
+    void reset_drawing();
 };
 
 #endif

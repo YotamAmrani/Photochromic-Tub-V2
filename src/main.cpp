@@ -10,9 +10,9 @@
 
 // DEFINITIONS:
 void print_current_position();
-void toggle_led();
+void toggle_led(bool turn_on);
 
-sys_state state = {IDLE, 0};
+sys_state state = {IDLE, micros()};
 StepperController stepper_c = StepperController();
 int current_steps_mask = 0;
 int current_direction_mask = 0;
@@ -31,30 +31,37 @@ void state_handler(int current_steps_mask, StepperController *stepper_c)
         if (state.sys_mode == IDLE)
         {
             state.sys_mode = MOVE;
-            // toggle_led(); // turn led on
+            toggle_led(true); // turn led on
         }
         else if (state.sys_mode == PRINT)
         {
             state.sys_mode = MOVE;
+            toggle_led(true); // turn led on
             // reset the current state
             // change to move state
         }
-        state.last_move_time_stamp = millis();
+        state.last_move_time_stamp = micros();
     }
     else
     {
-        if (state.sys_mode == MOVE && (millis() - state.last_move_time_stamp) > LED_DEBOUNCE_TIME)
+        if (state.sys_mode == MOVE && (micros() - state.last_move_time_stamp) > LED_DEBOUNCE_TIME)
         {
             state.sys_mode = IDLE;
             stepper_c->set_enable(false);
-            // toggle_led(); // turn led off
+            toggle_led(false); // turn led off
+        }
+        else if (state.sys_mode == PRINT && pl.is_drawing_finished())
+        {
+            state.sys_mode = IDLE;
+            toggle_led(false);
+            state.last_move_time_stamp = micros();
         }
     }
 }
 
-void toggle_led(sys_state *state)
+void toggle_led(bool turn_on)
 {
-    if (!digitalRead(LED_PIN) && state->sys_mode == MOVE)
+    if (!digitalRead(LED_PIN) && turn_on)
     {
         analogWrite(LED_PIN, LED_TURN_ON_VALUE);
     }
@@ -63,18 +70,6 @@ void toggle_led(sys_state *state)
         analogWrite(LED_PIN, LOW);
     }
 }
-
-// void toggle_led()
-// {
-//     if (!digitalRead(LED_PIN))
-//     {
-//         analogWrite(LED_PIN, LED_TURN_ON_VALUE);
-//     }
-//     else
-//     {
-//         analogWrite(LED_PIN, LOW);
-//     }
-// }
 
 void auto_homing(StepperController *stepper_c)
 {
@@ -105,6 +100,19 @@ void print_current_position()
     Serial.println(stepper_c.get_steps_count()[Z_AXIS]);
 }
 
+void initialize_auto_print()
+{
+    if (micros() - state.last_move_time_stamp > PENDING_TIME)
+    {
+        // running_time = micros();
+        pl.reset_drawing();
+        pl.load_drawing(testing, 25);
+        // toggle_led(true);
+        stepper_c.set_enable(true);
+        state.sys_mode = PRINT;
+    }
+}
+
 void setup()
 {
 
@@ -113,12 +121,12 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
 
+    /** AUTO HOME**/
     auto_homing(&stepper_c);
 
-    // pl.init_segment_plan(target);
-    pl.load_drawing(testing, 25);
-    stepper_c.set_enable(true);
-    state.sys_mode = PRINT;
+    // pl.load_drawing(testing, 25);
+    // stepper_c.set_enable(true);
+    state.sys_mode = IDLE;
 }
 
 void loop()
@@ -128,11 +136,8 @@ void loop()
     current_direction_mask = 0;
     getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
-    toggle_led(&state);
-    Serial.print("current mask: ");
-    Serial.print(current_steps_mask);
-    Serial.print(",");
-    Serial.println(current_direction_mask);
+    // toggle_led(&state);
+
     switch (state.sys_mode)
     {
     case MOVE:
@@ -142,7 +147,7 @@ void loop()
         pl.plot_drawing();
         break;
     case IDLE:
-        // code block
+        initialize_auto_print();
         break;
     default:
         // code block

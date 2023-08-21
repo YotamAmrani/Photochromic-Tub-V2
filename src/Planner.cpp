@@ -221,14 +221,14 @@ void Planner::plot_drawing()
                 int(mm_to_steps(Z_STEPS_PER_MM, current_drawing_[current_segment_][Z_AXIS]))};
 
             // start of segment
-            // init_segment_plan(drawing_to_plot[current_segment_]);
             init_segment_plan(target_to_steps);
             // print_segment_positions();
             // print_segment();
+            // print_stepper();
             move_to_position();
             Serial.print("Finished segment: ");
             Serial.println(current_segment_);
-            print_stepper();
+
             current_segment_++;
         }
         else if (is_segment_printing_)
@@ -237,13 +237,14 @@ void Planner::plot_drawing()
         }
         else if (current_segment_ == current_drawing_size_)
         {
-            print_stepper();
-            Serial.println("Finished drawing!");
-            current_drawing_ = nullptr;
-            current_drawing_size_ = 0;
-            current_segment_ = 0;
-            finished_drawing_ = true;
-            is_segment_printing_ = false;
+            // print_stepper();
+            // Serial.println("Finished drawing!");
+            // current_drawing_ = nullptr;
+            // current_drawing_size_ = 0;
+            // current_segment_ = 0;
+            // finished_drawing_ = true;
+            // is_segment_printing_ = false;
+            reset_drawing();
         }
     }
 }
@@ -251,4 +252,15 @@ void Planner::plot_drawing()
 bool Planner::is_drawing_finished()
 {
     return finished_drawing_;
+}
+
+void Planner::reset_drawing()
+{
+    print_stepper();
+    Serial.println("Finished drawing!");
+    current_drawing_ = nullptr;
+    current_drawing_size_ = 0;
+    current_segment_ = 0;
+    finished_drawing_ = true;
+    is_segment_printing_ = false;
 }
