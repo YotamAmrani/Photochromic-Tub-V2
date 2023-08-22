@@ -80,10 +80,22 @@ void auto_homing(StepperController *stepper_c)
     {
         stepper_c->move_step(1, 1);
     }
+
     while (digitalRead(Y_LIMIT_SW_PIN))
     {
         stepper_c->move_step(2, 2);
     }
+    stepper_c->set_steps_count(0, 0, 0);
+    while (stepper_c->get_steps_count()[X_AXIS] < mm_to_steps(MM_OFFSET, X_STEPS_PER_MM))
+    {
+        stepper_c->move_step(1, 0);
+    }
+
+    while (stepper_c->get_steps_count()[Y_AXIS] < mm_to_steps(MM_OFFSET, Y_STEPS_PER_MM))
+    {
+        stepper_c->move_step(2, 0);
+    }
+
     stepper_c->set_steps_count(0, 0, 0);
     stepper_c->set_enable(false);
     stepper_c->set_steps_rate(STEPS_RATE);

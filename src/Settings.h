@@ -50,12 +50,15 @@
 #define Y_STEPS_PER_MM 40
 #define Z_STEPS_PER_MM 100
 
-// LIMITS SETTINGS
+// SOFT LIMITS SETTINGS
 #define ENABLE_SOFT_LIMIT 1 // uncomment to disable limits
 #define AUTO_HOME_STEPS_RATE 1500
 #define X_MM_LIMIT 150
 #define Y_MM_LIMIT 120
 #define Z_MM_LIMIT 200
+
+// AUTO HOME OFFSET
+#define MM_OFFSET 5
 
 // AUTO PRINTING
 #define PENDING_TIME (1000000 * 180)
