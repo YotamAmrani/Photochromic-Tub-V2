@@ -51,7 +51,7 @@
 #define Z_STEPS_PER_MM 100
 
 // LIMITS SETTINGS
-#define ENABLE_LIMIT 1 // uncomment to disable limits
+#define ENABLE_SOFT_LIMIT 1 // uncomment to disable limits
 #define AUTO_HOME_STEPS_RATE 1500
 #define X_MM_LIMIT 150
 #define Y_MM_LIMIT 120

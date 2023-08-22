@@ -63,7 +63,7 @@ const int *StepperController::get_steps_count() const
 /*    MOVEMENT METHODS    **/
 void StepperController::step(int current_step_mask, int current_direction_mask)
 {
-#ifdef ENABLE_LIMIT
+#ifdef ENABLE_SOFT_LIMIT
   for (int i = 0; i < N_AXIS; ++i)
   {
     int current_step = bit_to_sign(current_direction_mask, 1 << i) * bit_istrue(current_step_mask, 1 << i);
