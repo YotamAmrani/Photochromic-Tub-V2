@@ -1,6 +1,7 @@
 #ifndef PLANNER_H
 #define PLANNER_H
 #include "StepperController.h"
+#include "Drawings.h"
 
 /** segment -represents the current line to plot **/
 struct segment_plan
@@ -24,7 +25,8 @@ class Planner
 private:
     StepperController *stepper_c_;
     struct segment_plan *segment_plan_;
-    double (*current_drawing_)[N_AXIS];
+    // double (*current_drawing_)[N_AXIS];
+    Drawing *current_drawing_;
     // https://stackoverflow.com/questions/22975633/reference-to-a-static-2d-array
     int current_drawing_size_;
     int current_segment_;
@@ -38,7 +40,8 @@ public:
     void print_steps();
     void print_segment_positions();
     void init_segment_plan(const int *target_pos);
-    void load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size);
+    // void load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size);
+    void load_drawing(Drawing *drawing_to_plot);
     void move_to_position();
     int get_line_direction_mask(const int *point1, const int *point2);
     void plot_drawing();

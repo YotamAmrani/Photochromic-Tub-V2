@@ -192,14 +192,29 @@ int Planner::get_line_direction_mask(const int *point1, const int *point2)
     return current_direction_mask;
 }
 
-void Planner::load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size)
-{
+// void Planner::load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size)
+// {
 
-    Serial.println("Start printing!");
+//     Serial.println("Start printing!");
+//     finished_drawing_ = false;
+//     current_drawing_ = drawing_to_plot;
+//     current_drawing_size_ = drawing_size;
+//     stepper_c_->set_steps_rate(700);
+// }
+
+void Planner::load_drawing(Drawing *drawing_to_plot)
+{
     finished_drawing_ = false;
     current_drawing_ = drawing_to_plot;
-    current_drawing_size_ = drawing_size;
     stepper_c_->set_steps_rate(700);
+    Serial.print("Start ploting drawing: ");
+    Serial.println(current_drawing_->drawing_name_);
+    Serial.print("first segment:");
+    Serial.print(current_drawing_->segments_[current_segment_][X_AXIS]);
+    Serial.print(",");
+    Serial.print(current_drawing_->segments_[current_segment_][Y_AXIS]);
+    Serial.print(",");
+    Serial.println(current_drawing_->segments_[current_segment_][Z_AXIS]);
 }
 
 void Planner::plot_drawing()
@@ -211,9 +226,9 @@ void Planner::plot_drawing()
             // Converting current target position into steps
             // this is a local variable, it may be flushed after a while?
             const int target_to_steps[N_AXIS] = {
-                int(mm_to_steps(X_STEPS_PER_MM, current_drawing_[current_segment_][X_AXIS])),
-                int(mm_to_steps(Y_STEPS_PER_MM, current_drawing_[current_segment_][Y_AXIS])),
-                int(mm_to_steps(Z_STEPS_PER_MM, current_drawing_[current_segment_][Z_AXIS]))};
+                int(mm_to_steps(X_STEPS_PER_MM, current_drawing_->segments_[current_segment_][X_AXIS])),
+                int(mm_to_steps(Y_STEPS_PER_MM, current_drawing_->segments_[current_segment_][Y_AXIS])),
+                int(mm_to_steps(Z_STEPS_PER_MM, current_drawing_->segments_[current_segment_][Z_AXIS]))};
 
             // start of segment
             init_segment_plan(target_to_steps);
@@ -230,15 +245,8 @@ void Planner::plot_drawing()
         {
             move_to_position();
         }
-        else if (current_segment_ == current_drawing_size_)
+        else if (current_segment_ == current_drawing_->drawing_size_)
         {
-            // print_stepper();
-            // Serial.println("Finished drawing!");
-            // current_drawing_ = nullptr;
-            // current_drawing_size_ = 0;
-            // current_segment_ = 0;
-            // finished_drawing_ = true;
-            // is_segment_printing_ = false;
             reset_drawing();
         }
     }
@@ -252,7 +260,8 @@ bool Planner::is_drawing_finished()
 void Planner::reset_drawing()
 {
     print_stepper();
-    Serial.println("Finished drawing!");
+    Serial.print("Finished plotting drawing: ");
+    Serial.println(current_drawing_->drawing_name_);
     current_drawing_ = nullptr;
     current_drawing_size_ = 0;
     current_segment_ = 0;

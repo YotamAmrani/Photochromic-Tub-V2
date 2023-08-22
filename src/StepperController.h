@@ -1,8 +1,8 @@
 
 #ifndef STEPPER_CONTROLLER_H
+#define STEPPER_CONTROLLER_H
 #include <Arduino.h>
 #include "Settings.h"
-#define STEPPER_CONTROLLER_H
 
 struct step_plan
 {
