@@ -125,7 +125,6 @@ void setup()
     auto_homing(&stepper_c);
 
     // pl.load_drawing(testing, 25);
-    // stepper_c.set_enable(true);
     state.sys_mode = IDLE;
 }
 
@@ -137,7 +136,6 @@ void loop()
     current_direction_mask = 0;
     getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
-    // toggle_led(&state);
 
     switch (state.sys_mode)
     {

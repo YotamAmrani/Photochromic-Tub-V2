@@ -21,6 +21,7 @@ private:
   unsigned long move_time_stamp_;
   unsigned long steps_rate_;
   int steps_counter_[N_AXIS];
+  const int max_steps_[N_AXIS];
 
   void step(int current_step_mask, int current_direction_mask);
 

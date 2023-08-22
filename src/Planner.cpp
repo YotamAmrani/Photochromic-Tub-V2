@@ -25,12 +25,7 @@ void Planner::print_stepper()
 void Planner::init_segment_plan(const int *target_pos)
 {
     Serial.println("Loading segment.");
-    // print_steps();
-    // const int *temp_position = stepper_c_->get_steps_count();
     segment_plan_->current_position = stepper_c_->get_steps_count();
-    // segment_plan_->current_position[X_AXIS] = temp_position[X_AXIS];
-    // segment_plan_->current_position[Y_AXIS] = temp_position[Y_AXIS];
-    // segment_plan_->current_position[Z_AXIS] = temp_position[Z_AXIS];
     segment_plan_->target_position[X_AXIS] = target_pos[X_AXIS];
     segment_plan_->target_position[Y_AXIS] = target_pos[Y_AXIS];
     segment_plan_->target_position[Z_AXIS] = target_pos[Z_AXIS];
