@@ -208,7 +208,7 @@ void Planner::load_drawing(Drawing *drawing_to_plot)
     current_drawing_ = drawing_to_plot;
     stepper_c_->set_steps_rate(700);
     Serial.print("Start ploting drawing: ");
-    Serial.println(current_drawing_->drawing_name_);
+    // Serial.println(current_drawing_->drawing_name_);
     Serial.print("first segment:");
     Serial.print(current_drawing_->segments_[current_segment_][X_AXIS]);
     Serial.print(",");
@@ -221,7 +221,8 @@ void Planner::plot_drawing()
 {
     if (!finished_drawing_)
     {
-        if (!is_segment_printing_ && current_segment_ < current_drawing_size_)
+        // Serial.println(current_drawing_size_);
+        if (!is_segment_printing_ && current_segment_ < current_drawing_->drawing_size_)
         {
             // Converting current target position into steps
             // this is a local variable, it may be flushed after a while?
@@ -232,7 +233,7 @@ void Planner::plot_drawing()
 
             // start of segment
             init_segment_plan(target_to_steps);
-            // print_segment_positions();
+            print_segment_positions();
             // print_segment();
             // print_stepper();
             move_to_position();
@@ -261,9 +262,8 @@ void Planner::reset_drawing()
 {
     print_stepper();
     Serial.print("Finished plotting drawing: ");
-    Serial.println(current_drawing_->drawing_name_);
+    // Serial.println(current_drawing_->drawing_name_);
     current_drawing_ = nullptr;
-    current_drawing_size_ = 0;
     current_segment_ = 0;
     finished_drawing_ = true;
     is_segment_printing_ = false;

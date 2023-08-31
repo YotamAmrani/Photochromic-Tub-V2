@@ -2,7 +2,7 @@
 #include "StepperController.h"
 #include "Planner.h"
 #include "JoystickInterface.h"
-#include "Drawings.h"
+#include "DrawingObjects.h"
 #include "Settings.h"
 
 // #include "avr8-stub.h"
@@ -20,32 +20,20 @@ int target[N_AXIS] = {0, 0, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
-double testing[25][N_AXIS] = {{35.17, 38.75, 0},
-                              {31.58, 39.78, 1.44},
-                              {28.64, 40.14, 2.87},
-                              {29.54, 36.52, 4.31},
-                              {31, 34.7, 5.6},
-                              {33.85, 37.35, 6.53},
-                              {36.7, 40.01, 7.46},
-                              {36.7, 41.6, 8.32},
-                              {32.77, 41.74, 9.07},
-                              {28.85, 41.87, 9.83},
-                              {24.92, 42.01, 10.59},
-                              {26.15, 38.93, 11.34},
-                              {27.99, 35.46, 12.1},
-                              {29.84, 31.99, 12.85},
-                              {31.73, 31.04, 13.54},
-                              {33.7, 34.48, 14.11},
-                              {35.67, 37.91, 14.68},
-                              {37.64, 41.35, 15.26},
-                              {39.61, 44.78, 15.83},
-                              {37.49, 45.24, 16.36},
-                              {33.61, 44.41, 16.86},
-                              {29.73, 43.59, 17.37},
-                              {25.85, 42.76, 17.88},
-                              {21.97, 41.94, 18.39},
-                              {21.09, 40.14, 18.9}};
-Drawing drawings[1] = {Drawing("testing", testing, 25)};
+
+void printDrawing(Drawing test)
+{
+
+    for (int i = 0; i < test.drawing_size_; i++)
+    {
+        const double *temp = test.segments_[i];
+        Serial.print(temp[X_AXIS]);
+        Serial.print(",");
+        Serial.print(temp[Y_AXIS]);
+        Serial.print(",");
+        Serial.println(temp[Z_AXIS]);
+    }
+}
 
 void state_handler(int current_steps_mask, StepperController *stepper_c)
 {
@@ -144,7 +132,7 @@ void initialize_auto_print()
     {
         // running_time = micros();
         pl.reset_drawing();
-        pl.load_drawing(&drawings[0]);
+        pl.load_drawing(&drawings[1]);
         // toggle_led(true);
         stepper_c.set_enable(true);
         state.sys_mode = PRINT;
@@ -159,9 +147,23 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
     /** AUTO HOME**/
-    auto_homing(&stepper_c);
+    // auto_homing(&stepper_c);
+    // Serial.println("Print drawing: ");
+    // printDrawing(drawings[0]);
 
-    // pl.load_drawing(testing, 25);
+    pl.load_drawing(&drawings[1]);
+    // stepper_c.set_enable(true);
+    // Serial.print("testing: ");
+    // Serial.println(pl.current_drawing_->drawing_size_);
+    // for (int i = 0; i < pl.current_drawing_->drawing_size_; i++)
+    // {
+    //     Serial.print(pl.current_drawing_->segments_[i][X_AXIS]);
+    //     Serial.print(",");
+    //     Serial.print(pl.current_drawing_->segments_[i][Y_AXIS]);
+    //     Serial.print(",");
+    //     Serial.println(pl.current_drawing_->segments_[i][Z_AXIS]);
+    // }
+
     state.sys_mode = IDLE;
 }
 
@@ -171,7 +173,7 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    getMovementMask(&current_steps_mask, &current_direction_mask);
+    // getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
 
     switch (state.sys_mode)

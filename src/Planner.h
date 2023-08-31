@@ -24,11 +24,10 @@ class Planner
 {
 private:
     StepperController *stepper_c_;
+    Drawing *current_drawing_;
     struct segment_plan *segment_plan_;
     // double (*current_drawing_)[N_AXIS];
-    Drawing *current_drawing_;
     // https://stackoverflow.com/questions/22975633/reference-to-a-static-2d-array
-    int current_drawing_size_;
     int current_segment_;
     bool finished_drawing_;
 
