@@ -61,7 +61,7 @@
 #define MM_OFFSET 5
 
 // AUTO PRINTING
-#define PENDING_TIME (1000000 * 10)
+#define PENDING_TIME (1000000 * 180)
 
 #define steps_to_mm(steps, ratio) (steps / ratio)
 #define mm_to_steps(mm, ratio) (mm * ratio)
