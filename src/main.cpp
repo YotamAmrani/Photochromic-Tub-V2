@@ -4,6 +4,7 @@
 #include "JoystickInterface.h"
 #include "DrawingObjects.h"
 #include "Settings.h"
+// #include <String.h>
 
 // #include "avr8-stub.h"
 // #include "app_api.h" // only needed with flash breakpoints
