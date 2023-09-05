@@ -41,7 +41,8 @@ public:
     void print_segment_positions();
     void init_segment_plan(const int *target_pos);
     // void load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size);
-    void load_drawing(Drawing *drawing_to_plot);
+    // void load_drawing(int drawingId, Drawing drawings[]);
+    void load_drawing(Drawing *current_drawing);
     void move_to_position();
     int get_line_direction_mask(const int *point1, const int *point2);
     void plot_drawing();

@@ -202,10 +202,10 @@ int Planner::get_line_direction_mask(const int *point1, const int *point2)
 //     stepper_c_->set_steps_rate(700);
 // }
 
-void Planner::load_drawing(Drawing *drawing_to_plot)
+void Planner::load_drawing(Drawing *current_drawing)
 {
     finished_drawing_ = false;
-    current_drawing_ = drawing_to_plot;
+    current_drawing_ = current_drawing;
     stepper_c_->set_steps_rate(700);
     Serial.print("Start ploting drawing: ");
     // Serial.println(current_drawing_->drawing_name_);

@@ -152,6 +152,25 @@ void setup()
     // Serial.println("Print drawing: ");
     // printDrawing(drawings[0]);
 
+    // Serial.println(drawings[0].drawing_name_);
+    Serial.println("print yoyo:");
+
+    String txtMsg = String(12); // a string for incoming text
+    txtMsg.concat('a');
+    int lastStringLength = txtMsg.length(); // previous length of the String
+
+    if (lastStringLength)
+    {
+        Serial.print("String length is ");
+        Serial.println(lastStringLength);
+    }
+    else
+    {
+        Serial.println(" Empty string ");
+        Serial.println(txtMsg.charAt(0));
+    }
+
+    // TODO: removing this line cause printing errors?
     pl.load_drawing(&drawings[1]);
     // stepper_c.set_enable(true);
     // Serial.print("testing: ");
