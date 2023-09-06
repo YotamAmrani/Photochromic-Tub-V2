@@ -8,3 +8,4 @@ include/
 test/
 .src/StepperController_30_7_plan_struct.ino
 .src/230807-152621-nanoatmega328.code-workspace
+platformio.ini
