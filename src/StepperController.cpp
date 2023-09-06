@@ -68,7 +68,7 @@ void StepperController::step(int current_step_mask, int current_direction_mask)
   {
     int current_step = bit_to_sign(current_direction_mask, 1 << i) * bit_istrue(current_step_mask, 1 << i);
 
-    if (current_step + steps_counter_[i] < max_steps_[i] && current_step + steps_counter_[i] > 0)
+    if (current_step + steps_counter_[i] <= max_steps_[i] && current_step + steps_counter_[i] >= 0)
     {
       digitalWrite(step_pin_[i], bit_istrue(current_step_mask, 1 << i));
       steps_counter_[i] += bit_to_sign(current_direction_mask, 1 << i) * bit_istrue(current_step_mask, 1 << i);
