@@ -268,3 +268,17 @@ void Planner::reset_drawing()
     finished_drawing_ = true;
     is_segment_printing_ = false;
 }
+
+void Planner::test_print()
+{
+    Serial.print("testing: ");
+    Serial.println(current_drawing_->drawing_size_);
+    for (int i = 0; i < current_drawing_->drawing_size_; i++)
+    {
+        Serial.print(current_drawing_->segments_[i][X_AXIS]);
+        Serial.print(",");
+        Serial.print(current_drawing_->segments_[i][Y_AXIS]);
+        Serial.print(",");
+        Serial.println(current_drawing_->segments_[i][Z_AXIS]);
+    }
+}

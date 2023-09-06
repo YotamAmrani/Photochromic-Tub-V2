@@ -173,16 +173,7 @@ void setup()
     // TODO: removing this line cause printing errors?
     pl.load_drawing(&drawings[1]);
     // stepper_c.set_enable(true);
-    // Serial.print("testing: ");
-    // Serial.println(pl.current_drawing_->drawing_size_);
-    // for (int i = 0; i < pl.current_drawing_->drawing_size_; i++)
-    // {
-    //     Serial.print(pl.current_drawing_->segments_[i][X_AXIS]);
-    //     Serial.print(",");
-    //     Serial.print(pl.current_drawing_->segments_[i][Y_AXIS]);
-    //     Serial.print(",");
-    //     Serial.println(pl.current_drawing_->segments_[i][Z_AXIS]);
-    // }
+    pl.test_print();
 
     state.sys_mode = IDLE;
 }

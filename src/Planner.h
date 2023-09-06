@@ -32,13 +32,13 @@ private:
     bool finished_drawing_;
 
 public:
-    Drawing *current_drawing_;
     bool is_segment_printing_;
     Planner(StepperController *stepper_c, struct segment_plan *seg_pl);
     void print_stepper();
     void print_segment();
     void print_steps();
     void print_segment_positions();
+    void test_print();
     void init_segment_plan(const int *target_pos);
     // void load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size);
     // void load_drawing(int drawingId, Drawing drawings[]);
