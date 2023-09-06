@@ -67,6 +67,7 @@ void state_handler(int current_steps_mask, StepperController *stepper_c)
         }
         else if (state.sys_mode == PRINT && pl.is_drawing_finished())
         {
+            Serial.println("--LOG: Changing state to IDLE");
             state.sys_mode = IDLE;
             toggle_led(false);
             state.last_move_time_stamp = micros();
@@ -133,10 +134,11 @@ void initialize_auto_print()
     {
         // running_time = micros();
         pl.reset_drawing();
-        pl.load_drawing(&drawings[1]);
+        pl.load_drawing(&drawings[0]);
         // toggle_led(true);
         stepper_c.set_enable(true);
         state.sys_mode = PRINT;
+        Serial.println("--LOG: Changing state to PRINT");
     }
 }
 
@@ -151,9 +153,9 @@ void setup()
     // auto_homing(&stepper_c);
 
     // TODO: removing this line cause printing errors?
-    pl.load_drawing(&drawings[1]);
-    // stepper_c.set_enable(true);
-    pl.test_print();
+    // pl.load_drawing(&drawings[1]);
+    stepper_c.set_steps_count(0, 0, 0);
+    // pl.test_print();
 
     state.sys_mode = IDLE;
 }

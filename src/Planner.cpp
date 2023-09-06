@@ -160,6 +160,12 @@ void Planner::move_to_position()
             }
             segment_plan_->z_step_value += segment_plan_->dz;
         }
+        if (current_position[Z_AXIS] == 1)
+        {
+            print_segment_positions();
+            print_stepper();
+            // this->print_segment();
+        }
 
         stepper_c_->move_step(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
     }
@@ -207,8 +213,7 @@ void Planner::load_drawing(Drawing *current_drawing)
     finished_drawing_ = false;
     current_drawing_ = current_drawing;
     stepper_c_->set_steps_rate(700);
-    Serial.print("Start ploting drawing: ");
-    // Serial.println(current_drawing_->drawing_name_);
+    Serial.println("Start ploting drawing");
     Serial.print("first segment:");
     Serial.print(current_drawing_->segments_[current_segment_][X_AXIS]);
     Serial.print(",");
@@ -261,7 +266,7 @@ bool Planner::is_drawing_finished()
 void Planner::reset_drawing()
 {
     print_stepper();
-    Serial.print("Finished plotting drawing: ");
+    Serial.println("Finished plotting drawing");
     // Serial.println(current_drawing_->drawing_name_);
     current_drawing_ = nullptr;
     current_segment_ = 0;
