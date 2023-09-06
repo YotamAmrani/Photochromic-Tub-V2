@@ -149,26 +149,6 @@ void setup()
     initJoystickPins();
     /** AUTO HOME**/
     // auto_homing(&stepper_c);
-    // Serial.println("Print drawing: ");
-    // printDrawing(drawings[0]);
-
-    // Serial.println(drawings[0].drawing_name_);
-    Serial.println("print yoyo:");
-
-    String txtMsg = String(12); // a string for incoming text
-    txtMsg.concat('a');
-    int lastStringLength = txtMsg.length(); // previous length of the String
-
-    if (lastStringLength)
-    {
-        Serial.print("String length is ");
-        Serial.println(lastStringLength);
-    }
-    else
-    {
-        Serial.println(" Empty string ");
-        Serial.println(txtMsg.charAt(0));
-    }
 
     // TODO: removing this line cause printing errors?
     pl.load_drawing(&drawings[1]);
@@ -180,7 +160,6 @@ void setup()
 
 void loop()
 {
-    // long unsigned int t = micros();
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
@@ -199,8 +178,6 @@ void loop()
         initialize_auto_print();
         break;
     default:
-        // code block
         break;
     }
-    // Serial.println(micros() - t);
 }
