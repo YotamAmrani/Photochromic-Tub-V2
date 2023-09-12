@@ -259,6 +259,7 @@ void Planner::reset_drawing()
     current_segment_ = 0;
     finished_drawing_ = true;
     is_segment_printing_ = false;
+    stepper_c_->set_led_value(0);
 }
 
 void Planner::test_print()
