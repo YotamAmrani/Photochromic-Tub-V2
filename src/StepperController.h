@@ -17,11 +17,13 @@ class StepperController
 private:
   const int step_pin_[N_AXIS];
   const int dir_pin_[N_AXIS];
+  const int led_pin_;
   const int en_pin_;
   unsigned long move_time_stamp_;
   unsigned long steps_rate_;
   int steps_counter_[N_AXIS];
   const int max_steps_[N_AXIS];
+  int led_pwm_value_;
 
   void step(int current_step_mask, int current_direction_mask);
 
@@ -33,6 +35,8 @@ public:
   void set_steps_rate(unsigned long steps_rate);
 
   void set_enable(bool isEnabled);
+
+  void set_led_value(int led_pwm_value);
 
   void move_step(int steps_mask, int current_direction_mask);
 

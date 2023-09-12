@@ -17,6 +17,7 @@ struct segment_plan
     int x_step_value;
     int y_step_value;
     int z_step_value;
+    int led_pwm_value;
 };
 
 /** A Planner for handling line plotting in a Non-Blocking manner **/
