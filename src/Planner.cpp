@@ -212,7 +212,7 @@ void Planner::load_drawing(Drawing *current_drawing)
 {
     finished_drawing_ = false;
     current_drawing_ = current_drawing;
-    stepper_c_->set_steps_rate(1000);
+    stepper_c_->set_steps_rate(current_drawing->drawing_speed_);
     Serial.println("Start ploting drawing");
     Serial.print("first segment:");
     Serial.print(pgm_read_word(&current_drawing_->segments_[current_segment_][X_AXIS]));

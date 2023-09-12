@@ -155,7 +155,6 @@ const static PROGMEM uint16_t simple_spiral[101][N_AXIS] = {{75, 75, 0},
                                                             {66, 47, 130},
                                                             {84, 54, 132},
                                                             {86, 72, 136}};
-
 // WORKS GOOD
 const static PROGMEM uint16_t large_sphere[101][N_AXIS] = {{75, 75, 0},
                                                            {86, 84, 2},
@@ -258,7 +257,6 @@ const static PROGMEM uint16_t large_sphere[101][N_AXIS] = {{75, 75, 0},
                                                            {67, 51, 108},
                                                            {83, 57, 111},
                                                            {84, 72, 113}};
-
 // WORKS GREAT - captured
 const static PROGMEM uint16_t test_spiral[117][N_AXIS] = {{75, 75, 0},
                                                           {84, 83, 1},
@@ -482,4 +480,6 @@ const static PROGMEM uint16_t testing[51][N_AXIS] = {{82, 84, 0},
                                                      {73, 83, 74},
                                                      {80, 80, 75}};
 
-Drawing drawings[NUMBER_OF_DRAWINGS] = {Drawing(test_spiral, 117), Drawing(tri_test, 51), Drawing(testing, 51)};
+Drawing drawings[NUMBER_OF_DRAWINGS] = {Drawing(test_spiral, 117, 1000),
+                                        Drawing(tri_test, 51, 1000),
+                                        Drawing(testing, 51, 1000)};
