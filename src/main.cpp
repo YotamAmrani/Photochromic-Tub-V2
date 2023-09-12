@@ -116,16 +116,13 @@ void print_current_position()
 
 void initialize_auto_print()
 {
-    if (micros() - state.last_move_time_stamp > PENDING_TIME)
-    {
-        // running_time = micros();
-        pl.reset_drawing();
-        pl.load_drawing(&drawings[0]);
-        toggle_led(true);
-        stepper_c.set_enable(true);
-        state.sys_mode = PRINT;
-        Serial.println("--LOG: Changing state to PRINT");
-    }
+    // running_time = micros();
+    pl.reset_drawing();
+    pl.load_drawing(&drawings[0]);
+    toggle_led(true);
+    stepper_c.set_enable(true);
+    state.sys_mode = PRINT;
+    Serial.println("--LOG: Changing state to PRINT");
 }
 
 void setup()
@@ -169,7 +166,10 @@ void loop()
         pl.plot_drawing();
         break;
     case IDLE:
-        initialize_auto_print();
+        if (micros() - state.last_move_time_stamp > PENDING_TIME)
+        {
+            initialize_auto_print();
+        }
         break;
     default:
         break;
