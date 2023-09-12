@@ -9,9 +9,10 @@ class Drawing
 private:
 public:
     // String drawing_name_;
-    const unsigned int (*segments_)[N_AXIS];
+    const uint16_t (*segments_)[N_AXIS];
     const int drawing_size_;
-    Drawing(unsigned int segments[][N_AXIS], int drawing_size);
+    const unsigned long drawing_speed_;
+    Drawing(const uint16_t segments[][N_AXIS], int drawing_size, const unsigned long drawing_speed);
     // void print_name();
 };
 

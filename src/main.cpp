@@ -136,13 +136,18 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
     /** AUTO HOME**/
-    auto_homing(&stepper_c);
+    // auto_homing(&stepper_c);
 
     // TODO: removing this line cause printing errors?
 
-    // stepper_c.set_steps_count(0, 0, 0);
-    pl.load_drawing(&drawings[0]);
-    pl.test_print();
+    stepper_c.set_steps_count(0, 0, 0);
+
+    for (int i = 0; i < NUMBER_OF_DRAWINGS; i++)
+    {
+        pl.load_drawing(&drawings[i]);
+        pl.test_print();
+        Serial.println("-- DONE");
+    }
 
     state.sys_mode = IDLE;
 }
@@ -152,7 +157,7 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    getMovementMask(&current_steps_mask, &current_direction_mask);
+    // getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
 
     switch (state.sys_mode)
