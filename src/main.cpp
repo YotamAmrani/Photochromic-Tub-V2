@@ -142,9 +142,9 @@ void setup()
 
     stepper_c.set_steps_count(0, 0, 0);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < NUMBER_OF_DRAWINGS; i++)
     {
-        pl.load_drawing(&drawings[0]);
+        pl.load_drawing(&drawings[i]);
         pl.test_print();
         Serial.println("-- DONE");
     }
