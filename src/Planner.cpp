@@ -215,11 +215,11 @@ void Planner::load_drawing(Drawing *current_drawing)
     stepper_c_->set_steps_rate(1000);
     Serial.println("Start ploting drawing");
     Serial.print("first segment:");
-    Serial.print(current_drawing_->segments_[current_segment_][X_AXIS]);
+    Serial.print(pgm_read_word(&current_drawing_->segments_[current_segment_][X_AXIS]));
     Serial.print(",");
-    Serial.print(current_drawing_->segments_[current_segment_][Y_AXIS]);
+    Serial.print(pgm_read_word(&current_drawing_->segments_[current_segment_][Y_AXIS]));
     Serial.print(",");
-    Serial.println(current_drawing_->segments_[current_segment_][Z_AXIS]);
+    Serial.println(pgm_read_word(&current_drawing_->segments_[current_segment_][Z_AXIS]));
 }
 
 void Planner::plot_drawing()
@@ -232,9 +232,9 @@ void Planner::plot_drawing()
             // Converting current target position into steps
             // this is a local variable, it may be flushed after a while?
             const int target_to_steps[N_AXIS] = {
-                int(mm_to_steps(X_STEPS_PER_MM, current_drawing_->segments_[current_segment_][X_AXIS])),
-                int(mm_to_steps(Y_STEPS_PER_MM, current_drawing_->segments_[current_segment_][Y_AXIS])),
-                int(mm_to_steps(Z_STEPS_PER_MM, current_drawing_->segments_[current_segment_][Z_AXIS]))};
+                int(mm_to_steps(X_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][X_AXIS]))),
+                int(mm_to_steps(Y_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][Y_AXIS]))),
+                int(mm_to_steps(Z_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][Z_AXIS])))};
 
             // start of segment
             init_segment_plan(target_to_steps);
@@ -280,10 +280,10 @@ void Planner::test_print()
     Serial.println(current_drawing_->drawing_size_);
     for (int i = 0; i < current_drawing_->drawing_size_; i++)
     {
-        Serial.print(current_drawing_->segments_[i][X_AXIS]);
+        Serial.print(pgm_read_word(&(current_drawing_->segments_)[i][X_AXIS]));
         Serial.print(",");
-        Serial.print(current_drawing_->segments_[i][Y_AXIS]);
+        Serial.print(pgm_read_word(&(current_drawing_->segments_)[i][Y_AXIS]));
         Serial.print(",");
-        Serial.println(current_drawing_->segments_[i][Z_AXIS]);
+        Serial.println(pgm_read_word(&(current_drawing_->segments_)[i][Z_AXIS]));
     }
 }

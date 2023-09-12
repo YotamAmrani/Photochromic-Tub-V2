@@ -1,6 +1,6 @@
 #include "Drawings.h"
 
-Drawing::Drawing(unsigned int segments[][N_AXIS], int drawing_size)
+Drawing::Drawing(const uint16_t segments[][N_AXIS], int drawing_size)
     : segments_(segments), drawing_size_(drawing_size)
 {
     // drawing_name_ = String(drawing_name);

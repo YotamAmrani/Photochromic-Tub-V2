@@ -128,6 +128,23 @@ void initialize_auto_print()
     }
 }
 
+void test_pgm(uint16_t numElements)
+{
+    Serial.println("testing:");
+    for (uint16_t i = 0; i < numElements; i++)
+    {
+        uint16_t x_val = pgm_read_word(&testing[i][X_AXIS]);
+        uint16_t y_val = pgm_read_word(&testing[i][Y_AXIS]);
+        uint16_t z_val = pgm_read_word(&testing[i][Z_AXIS]);
+        Serial.print(x_val);
+        Serial.print(",");
+        Serial.print(y_val);
+        Serial.print(",");
+        Serial.println(z_val);
+    }
+    Serial.println("--DONE!");
+}
+
 void setup()
 {
 
@@ -136,13 +153,20 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
     /** AUTO HOME**/
-    auto_homing(&stepper_c);
+    // auto_homing(&stepper_c);
 
     // TODO: removing this line cause printing errors?
 
-    // stepper_c.set_steps_count(0, 0, 0);
-    pl.load_drawing(&drawings[0]);
-    pl.test_print();
+    stepper_c.set_steps_count(0, 0, 0);
+
+    for (int i = 0; i < 3; i++)
+    {
+        pl.load_drawing(&drawings[0]);
+        pl.test_print();
+        Serial.println("-- DONE");
+    }
+
+    // test_pgm(51);
 
     state.sys_mode = IDLE;
 }
@@ -152,7 +176,7 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    getMovementMask(&current_steps_mask, &current_direction_mask);
+    // getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
 
     switch (state.sys_mode)
