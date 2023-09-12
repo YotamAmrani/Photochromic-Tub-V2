@@ -128,23 +128,6 @@ void initialize_auto_print()
     }
 }
 
-void test_pgm(uint16_t numElements)
-{
-    Serial.println("testing:");
-    for (uint16_t i = 0; i < numElements; i++)
-    {
-        uint16_t x_val = pgm_read_word(&testing[i][X_AXIS]);
-        uint16_t y_val = pgm_read_word(&testing[i][Y_AXIS]);
-        uint16_t z_val = pgm_read_word(&testing[i][Z_AXIS]);
-        Serial.print(x_val);
-        Serial.print(",");
-        Serial.print(y_val);
-        Serial.print(",");
-        Serial.println(z_val);
-    }
-    Serial.println("--DONE!");
-}
-
 void setup()
 {
 
@@ -165,8 +148,6 @@ void setup()
         pl.test_print();
         Serial.println("-- DONE");
     }
-
-    // test_pgm(51);
 
     state.sys_mode = IDLE;
 }
