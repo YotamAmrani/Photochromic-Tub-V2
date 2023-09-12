@@ -22,20 +22,6 @@ const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
 
-void printDrawing(Drawing test)
-{
-
-    for (int i = 0; i < test.drawing_size_; i++)
-    {
-        const double *temp = test.segments_[i];
-        Serial.print(temp[X_AXIS]);
-        Serial.print(",");
-        Serial.print(temp[Y_AXIS]);
-        Serial.print(",");
-        Serial.println(temp[Z_AXIS]);
-    }
-}
-
 void state_handler(int current_steps_mask, StepperController *stepper_c)
 {
     // if movement was deteced
@@ -135,7 +121,7 @@ void initialize_auto_print()
         // running_time = micros();
         pl.reset_drawing();
         pl.load_drawing(&drawings[0]);
-        // toggle_led(true);
+        toggle_led(true);
         stepper_c.set_enable(true);
         state.sys_mode = PRINT;
         Serial.println("--LOG: Changing state to PRINT");
@@ -150,12 +136,13 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
     /** AUTO HOME**/
-    // auto_homing(&stepper_c);
+    auto_homing(&stepper_c);
 
     // TODO: removing this line cause printing errors?
-    // pl.load_drawing(&drawings[1]);
+
     stepper_c.set_steps_count(0, 0, 0);
-    // pl.test_print();
+    pl.load_drawing(&drawings[0]);
+    pl.test_print();
 
     state.sys_mode = IDLE;
 }
@@ -165,7 +152,7 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    // getMovementMask(&current_steps_mask, &current_direction_mask);
+    getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
 
     switch (state.sys_mode)
