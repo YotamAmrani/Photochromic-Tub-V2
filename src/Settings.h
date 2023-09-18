@@ -63,7 +63,7 @@
 // AUTO HOME OFFSET
 #define MM_OFFSET 5
 
-// AUTO PRINTING
+// AUTO PRINTING8
 #define PENDING_TIME (1000000 * 180)
 
 #define steps_to_mm(steps, ratio) (steps / ratio)
