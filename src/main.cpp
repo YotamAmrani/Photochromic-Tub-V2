@@ -17,7 +17,7 @@ sys_state state = {IDLE, micros()};
 StepperController stepper_c = StepperController();
 int current_steps_mask = 0;
 int current_direction_mask = 0;
-int target[N_AXIS] = {0, 0, 0};
+int target[N_INSTRUCTIONS] = {0, 0, 0, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
@@ -120,7 +120,7 @@ void initialize_auto_print()
     {
         // running_time = micros();
         pl.reset_drawing();
-        pl.load_drawing(&drawings[0]);
+        pl.load_drawing(&drawings[3]);
         toggle_led(true);
         stepper_c.set_enable(true);
         state.sys_mode = PRINT;
@@ -136,7 +136,7 @@ void setup()
     editADCPrescaler();
     initJoystickPins();
     /** AUTO HOME**/
-    // auto_homing(&stepper_c);
+    auto_homing(&stepper_c);
 
     // TODO: removing this line cause printing errors?
 
@@ -157,7 +157,7 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    // getMovementMask(&current_steps_mask, &current_direction_mask);
+    getMovementMask(&current_steps_mask, &current_direction_mask);
     state_handler(current_steps_mask, &stepper_c);
 
     switch (state.sys_mode)

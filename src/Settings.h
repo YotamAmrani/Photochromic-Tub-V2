@@ -1,14 +1,22 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-// Macros
+// Instructions indices
 #define X_AXIS 0
 #define Y_AXIS 1
 #define Z_AXIS 2
+#define LED_VALUE 3
+
 #define N_AXIS 3
+#define N_INSTRUCTIONS 4
 #define bit_istrue(x, mask) ((x & mask) != 0)
 #define bit_to_sign(x, mask) (((x & mask) != 0) ? -1 : 1)
 #define DIRECTION_INVERT_MASK 2
+
+// LED
+#define LED_PIN 11
+#define LED_TURN_ON_VALUE 255
+#define LED_DEBOUNCE_TIME 300
 
 // STEPERS CONFIGURATIONS
 #define X_STEP_PIN 5
@@ -38,11 +46,6 @@
 
 // #define LED_INPUT_PIN A4
 
-// LED
-#define LED_PIN 11
-#define LED_TURN_ON_VALUE 255
-#define LED_DEBOUNCE_TIME 300
-
 // SYSTEM CONFIGURATIONS
 #define STEP_PULSE_LENGTH 20
 #define STEPS_RATE 500
@@ -60,7 +63,7 @@
 // AUTO HOME OFFSET
 #define MM_OFFSET 5
 
-// AUTO PRINTING
+// AUTO PRINTING8
 #define PENDING_TIME (1000000 * 180)
 
 #define steps_to_mm(steps, ratio) (steps / ratio)

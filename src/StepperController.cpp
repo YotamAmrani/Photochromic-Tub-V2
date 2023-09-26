@@ -2,8 +2,10 @@
 
 StepperController::StepperController() : step_pin_{X_STEP_PIN, Y_STEP_PIN, Z_STEP_PIN},
                                          dir_pin_{X_DIR_PIN, Y_DIR_PIN, Z_DIR_PIN},
+                                         led_pin_(LED_PIN),
                                          en_pin_(EN_PIN), steps_counter_{0, 0, 0},
-                                         max_steps_{mm_to_steps(X_MM_LIMIT, X_STEPS_PER_MM), mm_to_steps(Y_MM_LIMIT, Y_STEPS_PER_MM), mm_to_steps(Z_MM_LIMIT, Z_STEPS_PER_MM)}
+                                         max_steps_{mm_to_steps(X_MM_LIMIT, X_STEPS_PER_MM), mm_to_steps(Y_MM_LIMIT, Y_STEPS_PER_MM), mm_to_steps(Z_MM_LIMIT, Z_STEPS_PER_MM)},
+                                         led_pwm_value_(0)
 
 {
   // Initializing values
@@ -52,6 +54,12 @@ void StepperController::set_steps_count(int x_steps, int y_steps, int z_steps)
   steps_counter_[X_AXIS] = x_steps;
   steps_counter_[Y_AXIS] = y_steps;
   steps_counter_[Z_AXIS] = z_steps;
+}
+
+void StepperController::set_led_value(int led_pwm_value)
+{
+  led_pwm_value_ = led_pwm_value;
+  analogWrite(LED_PIN, led_pwm_value);
 }
 
 /*    GETTERS    **/

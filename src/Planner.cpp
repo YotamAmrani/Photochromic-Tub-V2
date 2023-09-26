@@ -29,6 +29,7 @@ void Planner::init_segment_plan(const int *target_pos)
     segment_plan_->target_position[X_AXIS] = target_pos[X_AXIS];
     segment_plan_->target_position[Y_AXIS] = target_pos[Y_AXIS];
     segment_plan_->target_position[Z_AXIS] = target_pos[Z_AXIS];
+    segment_plan_->led_pwm_value = target_pos[LED_VALUE];
     segment_plan_->dx = abs(segment_plan_->current_position[X_AXIS] - target_pos[X_AXIS]);
     segment_plan_->dy = abs(segment_plan_->current_position[Y_AXIS] - target_pos[Y_AXIS]);
     segment_plan_->dz = abs(segment_plan_->current_position[Z_AXIS] - target_pos[Z_AXIS]);
@@ -127,6 +128,7 @@ void Planner::move_to_position()
             is_segment_printing_ = true;
             stepper_c_->set_enable(true);
             stepper_c_->set_direction(segment_plan_->current_direction_mask);
+            stepper_c_->set_led_value(segment_plan_->led_pwm_value);
         }
 
         segment_plan_->current_step_mask = 0;
@@ -160,12 +162,6 @@ void Planner::move_to_position()
             }
             segment_plan_->z_step_value += segment_plan_->dz;
         }
-        if (current_position[Z_AXIS] == 1)
-        {
-            print_segment_positions();
-            print_stepper();
-            // this->print_segment();
-        }
 
         stepper_c_->move_step(segment_plan_->current_step_mask, segment_plan_->current_direction_mask);
     }
@@ -198,16 +194,6 @@ int Planner::get_line_direction_mask(const int *point1, const int *point2)
     return current_direction_mask;
 }
 
-// void Planner::load_drawing(double drawing_to_plot[][N_AXIS], int drawing_size)
-// {
-
-//     Serial.println("Start printing!");
-//     finished_drawing_ = false;
-//     current_drawing_ = drawing_to_plot;
-//     current_drawing_size_ = drawing_size;
-//     stepper_c_->set_steps_rate(700);
-// }
-
 void Planner::load_drawing(Drawing *current_drawing)
 {
     finished_drawing_ = false;
@@ -231,10 +217,11 @@ void Planner::plot_drawing()
         {
             // Converting current target position into steps
             // this is a local variable, it may be flushed after a while?
-            const int target_to_steps[N_AXIS] = {
+            const int target_to_steps[N_INSTRUCTIONS] = {
                 int(mm_to_steps(X_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][X_AXIS]))),
                 int(mm_to_steps(Y_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][Y_AXIS]))),
-                int(mm_to_steps(Z_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][Z_AXIS])))};
+                int(mm_to_steps(Z_STEPS_PER_MM, pgm_read_word(&current_drawing_->segments_[current_segment_][Z_AXIS]))),
+                int(pgm_read_word(&current_drawing_->segments_[current_segment_][LED_VALUE]))};
 
             // start of segment
             init_segment_plan(target_to_steps);
@@ -272,6 +259,7 @@ void Planner::reset_drawing()
     current_segment_ = 0;
     finished_drawing_ = true;
     is_segment_printing_ = false;
+    stepper_c_->set_led_value(0);
 }
 
 void Planner::test_print()
