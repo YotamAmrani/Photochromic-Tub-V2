@@ -4,10 +4,6 @@
 #include "JoystickInterface.h"
 #include "DrawingObjects.h"
 #include "Settings.h"
-// #include <String.h>
-
-// #include "avr8-stub.h"
-// #include "app_api.h" // only needed with flash breakpoints
 
 // DEFINITIONS:
 void print_current_position();
@@ -21,6 +17,7 @@ int target[N_INSTRUCTIONS] = {0, 0, 0, 0};
 const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
+int current_drawing = 0;
 
 void state_handler(int current_steps_mask, StepperController *stepper_c)
 {
@@ -78,15 +75,18 @@ void auto_homing(StepperController *stepper_c)
     Serial.println("Auto homing! ");
     stepper_c->set_steps_rate(AUTO_HOME_STEPS_RATE);
     stepper_c->set_enable(true);
-    while (digitalRead(X_LIMIT_SW_PIN))
+    stepper_c->set_steps_count(mm_to_steps(X_MM_LIMIT + 10, X_STEPS_PER_MM), mm_to_steps(Y_MM_LIMIT + 10, Y_STEPS_PER_MM), 0);
+    while (stepper_c->get_steps_count()[X_AXIS] > 0)
     {
         stepper_c->move_step(1, 1);
     }
 
-    while (digitalRead(Y_LIMIT_SW_PIN))
+    // while (digitalRead(Y_LIMIT_SW_PIN))
+    while (stepper_c->get_steps_count()[Y_AXIS] > 0)
     {
         stepper_c->move_step(2, 2);
     }
+
     stepper_c->set_steps_count(0, 0, 0);
     while (stepper_c->get_steps_count()[X_AXIS] < mm_to_steps(MM_OFFSET, X_STEPS_PER_MM))
     {
@@ -114,18 +114,18 @@ void print_current_position()
     Serial.println(stepper_c.get_steps_count()[Z_AXIS]);
 }
 
-void initialize_auto_print()
+void initialize_auto_print(int *current_drawing)
 {
-    if (micros() - state.last_move_time_stamp > PENDING_TIME)
-    {
-        // running_time = micros();
-        pl.reset_drawing();
-        pl.load_drawing(&drawings[3]);
-        toggle_led(true);
-        stepper_c.set_enable(true);
-        state.sys_mode = PRINT;
-        Serial.println("--LOG: Changing state to PRINT");
-    }
+
+    // running_time = micros();
+    pl.reset_drawing();
+    pl.load_drawing(&drawings[*current_drawing]);
+    toggle_led(true);
+    stepper_c.set_enable(true);
+    state.sys_mode = PRINT;
+    Serial.println("--LOG: Changing state to PRINT");
+
+    (*current_drawing) = (*current_drawing + 1) % NUMBER_OF_DRAWINGS;
 }
 
 void setup()
@@ -169,7 +169,10 @@ void loop()
         pl.plot_drawing();
         break;
     case IDLE:
-        initialize_auto_print();
+        if (micros() - state.last_move_time_stamp > PENDING_TIME)
+        {
+            initialize_auto_print(&current_drawing);
+        }
         break;
     default:
         break;

@@ -57,7 +57,7 @@
 #define ENABLE_SOFT_LIMIT 1 // uncomment to disable soft limits
 #define AUTO_HOME_STEPS_RATE 1500
 #define X_MM_LIMIT 150
-#define Y_MM_LIMIT 150
+#define Y_MM_LIMIT 160
 #define Z_MM_LIMIT 200
 
 // AUTO HOME OFFSET
