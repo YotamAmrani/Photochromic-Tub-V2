@@ -63,7 +63,7 @@ void StepperController::set_led_value(int led_pwm_value)
 }
 
 /*    GETTERS    **/
-const unsigned long *StepperController::get_steps_count() const
+const int *StepperController::get_steps_count() const
 {
   return steps_counter_;
 }

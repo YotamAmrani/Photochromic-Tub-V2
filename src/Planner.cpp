@@ -13,7 +13,7 @@ Planner::Planner(StepperController *stepper_c, struct segment_plan *seg_pl)
 
 void Planner::print_stepper()
 {
-    const unsigned long *pos = stepper_c_->get_steps_count();
+    const int *pos = stepper_c_->get_steps_count();
     Serial.println("POS:");
     Serial.print(pos[X_AXIS]);
     Serial.print(",");
@@ -110,7 +110,7 @@ void Planner::print_segment_positions()
 
 void Planner::move_to_position()
 {
-    const unsigned long *current_position = stepper_c_->get_steps_count();
+    const int *current_position = stepper_c_->get_steps_count();
     // if (
     //     segment_plan_->current_position[X_AXIS] != current_position[X_AXIS] ||
     //     segment_plan_->current_position[Y_AXIS] != current_position[Y_AXIS] ||
@@ -173,7 +173,7 @@ void Planner::move_to_position()
     }
 }
 
-int Planner::get_line_direction_mask(const unsigned long *point1, const unsigned long *point2)
+int Planner::get_line_direction_mask(const int *point1, const int *point2)
 {
     const int x_direction_sign = sgn(point2[X_AXIS] - point1[X_AXIS]);
     const int y_direction_sign = sgn(point2[Y_AXIS] - point1[Y_AXIS]);

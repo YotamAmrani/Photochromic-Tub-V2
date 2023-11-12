@@ -6,8 +6,8 @@
 /** segment -represents the current line to plot **/
 struct segment_plan
 {
-    const unsigned long *current_position;
-    unsigned long target_position[N_AXIS];
+    const int *current_position;
+    int target_position[N_AXIS];
     int current_step_mask;
     int current_direction_mask;
     int dx;
@@ -45,7 +45,7 @@ public:
     // void load_drawing(int drawingId, Drawing drawings[]);
     void load_drawing(Drawing *current_drawing);
     void move_to_position();
-    int get_line_direction_mask(const unsigned long *point1, const unsigned long *point2);
+    int get_line_direction_mask(const int *point1, const int *point2);
     void plot_drawing();
     bool is_drawing_finished();
     void reset_drawing();

@@ -14,7 +14,7 @@ StepperController stepper_c = StepperController();
 int current_steps_mask = 0;
 int current_direction_mask = 0;
 int target[N_INSTRUCTIONS] = {0, 0, 0, 0};
-const unsigned long *current_position = stepper_c.get_steps_count();
+const int *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
 int current_drawing = 0;
@@ -94,7 +94,7 @@ void auto_homing(StepperController *stepper_c)
     while (stepper_c->get_steps_count()[Z_AXIS] > 0)
     {
         stepper_c->move_step(4, 4);
-        Serial.println(stepper_c->get_steps_count()[Z_AXIS]);
+        // Serial.println(stepper_c->get_steps_count()[Z_AXIS]);
     }
 
     stepper_c->set_steps_count(0, 0, 0);

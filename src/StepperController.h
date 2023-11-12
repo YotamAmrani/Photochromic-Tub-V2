@@ -21,8 +21,8 @@ private:
   const int en_pin_;
   unsigned long move_time_stamp_;
   unsigned long steps_rate_;
-  unsigned long steps_counter_[N_AXIS];
-  const unsigned long max_steps_[N_AXIS];
+  int steps_counter_[N_AXIS];
+  const int max_steps_[N_AXIS];
   int led_pwm_value_;
 
   void step(int current_step_mask, int current_direction_mask);
@@ -79,7 +79,7 @@ public:
    * Returns the current steps count (i.e. the position of each axis in steps)
    * @return a pointer to steps_counter_ an array of 3 counter, one per each axis X, Y, Z in order.
    */
-  const unsigned long *get_steps_count() const;
+  const int *get_steps_count() const;
   // https://stackoverflow.com/questions/10716769/c-difference-between-const-positioning
 
   /**
