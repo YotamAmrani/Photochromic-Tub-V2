@@ -49,7 +49,7 @@ void StepperController::set_direction(int current_direction_mask)
   digitalWrite(dir_pin_[Z_AXIS], bit_istrue(current_direction_mask, 1 << Z_AXIS));
 }
 
-void StepperController::set_steps_count(int x_steps, int y_steps, int z_steps)
+void StepperController::set_steps_count(unsigned long x_steps, unsigned long y_steps, unsigned long z_steps)
 {
   steps_counter_[X_AXIS] = x_steps;
   steps_counter_[Y_AXIS] = y_steps;
@@ -63,7 +63,7 @@ void StepperController::set_led_value(int led_pwm_value)
 }
 
 /*    GETTERS    **/
-const int *StepperController::get_steps_count() const
+const unsigned long *StepperController::get_steps_count() const
 {
   return steps_counter_;
 }

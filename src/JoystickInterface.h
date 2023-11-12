@@ -15,4 +15,10 @@ void getMovementMaskD(int *current_steps_mask, int *current_direction_mask);
 
 void initJoystickPins();
 
+void initDigitalJoystickPins();
+
+void getDigitalMovementMask(int *current_steps_mask, int *current_direction_mask);
+
+void printJoystickInputDigital();
+
 #endif

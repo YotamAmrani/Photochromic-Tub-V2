@@ -14,7 +14,7 @@ StepperController stepper_c = StepperController();
 int current_steps_mask = 0;
 int current_direction_mask = 0;
 int target[N_INSTRUCTIONS] = {0, 0, 0, 0};
-const int *current_position = stepper_c.get_steps_count();
+const unsigned long *current_position = stepper_c.get_steps_count();
 segment_plan seg_p = {0};
 Planner pl = Planner(&stepper_c, &seg_p);
 int current_drawing = 0;
@@ -75,7 +75,11 @@ void auto_homing(StepperController *stepper_c)
     Serial.println("Auto homing! ");
     stepper_c->set_steps_rate(AUTO_HOME_STEPS_RATE);
     stepper_c->set_enable(true);
-    stepper_c->set_steps_count(mm_to_steps(X_MM_LIMIT + 10, X_STEPS_PER_MM), mm_to_steps(Y_MM_LIMIT + 10, Y_STEPS_PER_MM), 0);
+
+    stepper_c->set_steps_count(mm_to_steps((X_MM_LIMIT), X_STEPS_PER_MM),
+     mm_to_steps((Y_MM_LIMIT), Y_STEPS_PER_MM), 
+     mm_to_steps((Z_MM_LIMIT), Z_STEPS_PER_MM));
+
     while (stepper_c->get_steps_count()[X_AXIS] > 0)
     {
         stepper_c->move_step(1, 1);
@@ -85,6 +89,12 @@ void auto_homing(StepperController *stepper_c)
     while (stepper_c->get_steps_count()[Y_AXIS] > 0)
     {
         stepper_c->move_step(2, 2);
+    }
+
+    while (stepper_c->get_steps_count()[Z_AXIS] > 0)
+    {
+        stepper_c->move_step(4, 4);
+        Serial.println(stepper_c->get_steps_count()[Z_AXIS]);
     }
 
     stepper_c->set_steps_count(0, 0, 0);
@@ -133,8 +143,10 @@ void setup()
 
     Serial.begin(115200);
     /** Init Joystick input pins **/
-    editADCPrescaler();
-    initJoystickPins();
+    // editADCPrescaler();
+    // initJoystickPins();
+    initDigitalJoystickPins();
+
     /** AUTO HOME**/
     auto_homing(&stepper_c);
 
@@ -157,7 +169,9 @@ void loop()
     /** GET INPUT MASK **/
     current_steps_mask = 0;
     current_direction_mask = 0;
-    getMovementMask(&current_steps_mask, &current_direction_mask);
+    // getMovementMask(&current_steps_mask, &current_direction_mask);
+    getDigitalMovementMask(&current_steps_mask, &current_direction_mask);
+
     state_handler(current_steps_mask, &stepper_c);
 
     switch (state.sys_mode)

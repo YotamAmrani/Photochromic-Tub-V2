@@ -11,11 +11,12 @@
 #define N_INSTRUCTIONS 4
 #define bit_istrue(x, mask) ((x & mask) != 0)
 #define bit_to_sign(x, mask) (((x & mask) != 0) ? -1 : 1)
-#define DIRECTION_INVERT_MASK 2
+#define DIRECTION_INVERT_MASK 6
 
 // LED
 #define LED_PIN 11
-#define LED_TURN_ON_VALUE 255
+// #define LED_TURN_ON_VALUE 255
+#define LED_TURN_ON_VALUE 100
 #define LED_DEBOUNCE_TIME 300
 
 // STEPERS CONFIGURATIONS
@@ -44,6 +45,13 @@
 #define UP_VALUE 0
 #define NOISE_VALUE 100
 
+#define X_POS_INPUT_PIN 9
+#define X_NEG_INPUT_PIN A0
+#define Y_POS_INPUT_PIN 12
+#define Y_NEG_INPUT_PIN A1
+#define Z_POS_INPUT_PIN A3
+#define Z_NEG_INPUT_PIN A2
+
 // #define LED_INPUT_PIN A4
 
 // SYSTEM CONFIGURATIONS
@@ -58,7 +66,7 @@
 #define AUTO_HOME_STEPS_RATE 1500
 #define X_MM_LIMIT 150
 #define Y_MM_LIMIT 160
-#define Z_MM_LIMIT 200
+#define Z_MM_LIMIT 300
 
 // AUTO HOME OFFSET
 #define MM_OFFSET 5
@@ -68,6 +76,7 @@
 
 #define steps_to_mm(steps, ratio) (steps / ratio)
 #define mm_to_steps(mm, ratio) (mm * ratio)
+
 template <typename T>
 int sgn(T val)
 {
@@ -80,6 +89,7 @@ enum State
   MOVE,
   PRINT
 };
+
 struct sys_state
 {
   State sys_mode;

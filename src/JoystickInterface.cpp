@@ -111,21 +111,82 @@ void initJoystickPins()
   digitalWrite(LED_PIN, LOW);
 }
 
-//    /* Move X AXIS */
-//     if(analogRead(X_INPUT_PIN) > (RIGHT_VALUE - NOISE) and analogRead(X_INPUT_PIN) < (RIGHT_VALUE + NOISE)){
-//        current_steps_mask = current_steps_mask | (1<<X_AXIS);
-//      }
-//     else if(analogRead(X_INPUT_PIN) > (LEFT_VALUE - NOISE) and analogRead(X_INPUT_PIN) < (LEFT_VALUE + NOISE)){
-//        current_steps_mask = current_steps_mask | (1<<X_AXIS);
-//        current_direction_mask = current_direction_mask | (1<<X_AXIS);
-//      }
-//
-//     /* Move Y AXIS */
-//     if(analogRead(Y_INPUT_PIN) > (FORWARD_VALUE - NOISE) and analogRead(Y_INPUT_PIN) < (FORWARD_VALUE + NOISE)){
-//        current_steps_mask = current_steps_mask | (1<<Y_AXIS);
-//
-//      }
-//     else if(analogRead(Y_INPUT_PIN) > (BACK_VALUE - NOISE) and analogRead(Y_INPUT_PIN) < (BACK_VALUE + NOISE)){
-//        current_direction_mask = current_direction_mask | (1<<Y_AXIS);
-//        current_steps_mask = current_steps_mask | (1<<Y_AXIS);
-//      }
+// Digital Joystick interface
+
+void initDigitalJoystickPins()
+{
+  pinMode(X_POS_INPUT_PIN, INPUT_PULLUP);
+  pinMode(X_NEG_INPUT_PIN, INPUT_PULLUP);
+  pinMode(Y_POS_INPUT_PIN, INPUT_PULLUP);
+  pinMode(Y_NEG_INPUT_PIN, INPUT_PULLUP);
+  pinMode(Z_POS_INPUT_PIN, INPUT_PULLUP);
+  pinMode(Z_NEG_INPUT_PIN, INPUT_PULLUP);
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+}
+
+void getDigitalMovementMask(int *current_steps_mask, int *current_direction_mask)
+{
+  *current_steps_mask = 0;
+  *current_direction_mask = 0;
+  int x_input_pos = digitalRead(X_POS_INPUT_PIN);
+  int x_input_neg = digitalRead(X_NEG_INPUT_PIN);
+  int y_input_pos = digitalRead(Y_POS_INPUT_PIN);
+  int y_input_neg = digitalRead(Y_NEG_INPUT_PIN);
+  int z_input_pos = digitalRead(Z_POS_INPUT_PIN);
+  int z_input_neg = digitalRead(Z_NEG_INPUT_PIN);
+
+  /* Move X AXIS */
+  if (x_input_neg == 0)
+  {
+    *current_steps_mask = *current_steps_mask | (1 << X_AXIS);
+    *current_direction_mask = *current_direction_mask | (1 << X_AXIS);
+  }
+  else if (x_input_pos == 0)
+  {
+    *current_steps_mask = *current_steps_mask | (1 << X_AXIS);
+  }
+
+  /* Move Y AXIS */
+  if (y_input_neg == 0)
+  {
+    *current_steps_mask = *current_steps_mask | (1 << Y_AXIS);
+    *current_direction_mask = *current_direction_mask | (1 << Y_AXIS);
+  }
+  else if (y_input_pos == 0)
+  {
+    *current_steps_mask = *current_steps_mask | (1 << Y_AXIS);
+  }
+
+  /* Move Z AXIS */
+  if (z_input_neg == 0)
+  {
+    *current_steps_mask = *current_steps_mask | (1 << Z_AXIS);
+    *current_direction_mask = *current_direction_mask | (1 << Z_AXIS);
+  }
+  else if (z_input_pos == 0)
+  {
+    *current_steps_mask = *current_steps_mask | (1 << Z_AXIS);
+  }
+}
+
+void printJoystickInputDigital()
+{
+  // put your main code here, to run repeatedly:
+  Serial.print("X axis:");
+  Serial.print(digitalRead(X_POS_INPUT_PIN));
+  Serial.print(":");
+  Serial.print(digitalRead(X_NEG_INPUT_PIN));
+  Serial.print(",");
+  Serial.print("Y axis:");
+  Serial.print(digitalRead(Y_POS_INPUT_PIN));
+  Serial.print(":");
+  Serial.print(digitalRead(Y_NEG_INPUT_PIN));
+  Serial.print(",");
+  Serial.print("Z axis:");
+  Serial.print(digitalRead(Z_POS_INPUT_PIN));
+  Serial.print(":");
+  Serial.println(digitalRead(Z_NEG_INPUT_PIN));
+
+  delay(5);
+}
